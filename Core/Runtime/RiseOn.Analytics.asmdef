@@ -1,0 +1,18 @@
+{
+    "name": "RiseOn.Analytics",
+    "rootNamespace": "RiseOn.Analytics",
+    "references": [
+        "UniTask",
+        "RiseOn.Consent",
+        "RiseOn.Utils"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

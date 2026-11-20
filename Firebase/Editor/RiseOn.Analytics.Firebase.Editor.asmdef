@@ -1,0 +1,21 @@
+{
+    "name": "RiseOn.Analytics.Firebase.Editor",
+    "rootNamespace": "RiseOn.Analytics.Firebase.Editor",
+    "references": [
+        "RiseOn.Analytics",
+        "RiseOn.Analytics.Firebase",
+        "RiseOn.Analytics.Editor",
+        "RiseOn.Utils.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

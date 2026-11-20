@@ -1,0 +1,19 @@
+{
+    "name": "RiseOn.Analytics.Firebase",
+    "rootNamespace": "RiseOn.Analytics.Firebase",
+    "references": [
+        "RiseOn.Analytics",
+        "RiseOn.Firebase",
+        "RiseOn.Consent",
+        "UniTask"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

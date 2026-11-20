@@ -1,0 +1,25 @@
+{
+    "name": "RiseOn.Analytics.Iap",
+    "rootNamespace": "RiseOn.Analytics",
+    "references": [
+        "RiseOn.Analytics",
+        "RiseOn.Iap"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "RISEON_ANALYTICS_IAP"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.riseon.iap",
+            "expression": "0.0.1",
+            "define": "RISEON_ANALYTICS_IAP"
+        }
+    ],
+    "noEngineReferences": false
+}

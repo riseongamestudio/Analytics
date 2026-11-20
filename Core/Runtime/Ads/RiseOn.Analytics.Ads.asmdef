@@ -1,0 +1,25 @@
+{
+    "name": "RiseOn.Analytics.Ads",
+    "rootNamespace": "RiseOn.Analytics",
+    "references": [
+        "RiseOn.Analytics",
+        "RiseOn.Ads"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "RISEON_ANALYTICS_ADS"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.riseon.ads",
+            "expression": "0.0.1",
+            "define": "RISEON_ANALYTICS_ADS"
+        }
+    ],
+    "noEngineReferences": false
+}

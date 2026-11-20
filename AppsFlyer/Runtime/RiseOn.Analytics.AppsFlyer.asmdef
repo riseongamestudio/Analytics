@@ -1,0 +1,19 @@
+{
+    "name": "RiseOn.Analytics.AppsFlyer",
+    "rootNamespace": "RiseOn.Analytics.AppsFlyer",
+    "references": [
+        "RiseOn.Analytics",
+        "RiseOn.Consent",
+        "UniTask",
+        "AppsFlyer"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

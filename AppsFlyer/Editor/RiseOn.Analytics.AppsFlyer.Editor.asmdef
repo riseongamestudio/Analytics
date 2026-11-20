@@ -1,0 +1,21 @@
+{
+    "name": "RiseOn.Analytics.AppsFlyer.Editor",
+    "rootNamespace": "RiseOn.Analytics.AppsFlyer.Editor",
+    "references": [
+        "RiseOn.Analytics",
+        "RiseOn.Analytics.Editor",
+        "RiseOn.Analytics.AppsFlyer",
+        "RiseOn.Utils.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
