@@ -34,7 +34,7 @@ namespace RiseOn.Analytics.Editor {
             }
         }
 
-        internal static readonly List<Service> Services = new();
+        internal static readonly List<Service> services = new();
 
         /// <param name="id">The service's <see cref="IAnalyticsSink.Id"/>.</param>
         /// <param name="tooltip">What the section's header explains on hover; null for nothing.</param>
@@ -45,9 +45,9 @@ namespace RiseOn.Analytics.Editor {
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void RegisterService(string id, string title, string tooltip = null, Action draw = null, Func<IEnumerable<SettingsIssue>> issues = null, Func<string, IEnumerable<string>> eventProblems = null) {
             var package = PackageInfo.FindForAssembly(Assembly.GetCallingAssembly())?.name;
-            Services.RemoveAll(service => service.Id == id);
-            Services.Add(new Service(id, title, tooltip, draw, issues, package, eventProblems));
-            Services.Sort((a, b) => string.CompareOrdinal(a.Title, b.Title));
+            services.RemoveAll(service => service.Id == id);
+            services.Add(new Service(id, title, tooltip, draw, issues, package, eventProblems));
+            services.Sort((a, b) => string.CompareOrdinal(a.Title, b.Title));
         }
     }
 }

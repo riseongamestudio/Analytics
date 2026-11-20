@@ -22,6 +22,8 @@
             Quantity      = quantity;
         }
 
-        public override string ToString() => $"{ProductId} x{Quantity}: {Value} {Currency} ({TransactionId})";
+        public override string ToString() {
+            return $"{ProductId} x{Quantity}: {Value} {Currency} ({TransactionId})";
+        }
     }
 }

@@ -147,7 +147,7 @@ namespace RiseOn.Analytics {
                 if (stopped) return;
 
                 if (!running) {
-                    if (pending.Count == QueueLimit) {
+                    if (pending.Count is QueueLimit) {
                         pending.Dequeue();
                         if (!overflowed) Debug.LogWarning($"{nameof(AnalyticsSdk)}: {Target.Id} has not started after {QueueLimit} calls; the oldest are dropped");
                         overflowed = true;

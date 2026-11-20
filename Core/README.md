@@ -1,39 +1,74 @@
-# RiseOn Analytics
+# RiseOn.Analytics
 
 Một API static cho analytics của game. Sự kiện, doanh thu quảng cáo, giao dịch mua
 và thuộc tính người chơi đi tới mọi dịch vụ đã cài (Firebase, AppsFlyer). Mỗi dịch
 vụ tự khởi động khi thứ nó cần đã sẵn sàng; game không gọi khởi tạo.
 
+Package `com.riseon.analytics`, namespace `RiseOn.Analytics`.
+
+## Mục lục
+
+- [Yêu cầu](#yêu-cầu)
+- [Cài đặt](#cài-đặt)
+- [Dùng trong game](#dùng-trong-game)
+- [Cài đặt của project](#cài-đặt-của-project)
+- [Sự kiện](#sự-kiện)
+- [Khi có lỗi](#khi-có-lỗi)
+- [Viết dịch vụ mới](#viết-dịch-vụ-mới)
+- [Lịch sử thay đổi](#lịch-sử-thay-đổi)
+- [Giấy phép](#giấy-phép)
+
 ## Yêu cầu
 
-- Unity 6000.0 trở lên.
-- Odin Inspector, cài tay từ Asset Store: `com.riseon.utils` (tự cài theo
-  `package.json`, vẽ các mục của trang cài đặt) cần nó.
-- `com.riseon.consent`: dịch vụ nào cần (AppsFlyer) chờ người chơi trả lời form
-  consent và popup ATT; người chơi đổi lựa chọn sau đó thì dịch vụ được báo.
-- Ít nhất một dịch vụ, cài bằng nút **Install** trên thanh của dịch vụ đó ở trang cài
-  đặt (xem bên dưới) hoặc thêm vào manifest:
+| Phụ thuộc | Cách có | Dùng cho |
+|---|---|---|
+| Unity 6000.3 | | Bản đang dùng để phát triển |
+| [Odin Inspector](https://odininspector.com) | Cài tay từ Asset Store | Các mục của trang cài đặt |
+| `com.riseon.consent` 1.0.2 | Tự cài theo `package.json` | Dịch vụ nào cần (AppsFlyer) chờ người chơi trả lời form consent và popup ATT; người chơi đổi lựa chọn sau đó thì dịch vụ được báo |
+| `com.riseon.utils` 1.0.18 | Tự cài theo `package.json` | Các mục của trang cài đặt |
+| `com.cysharp.unitask` 2.5.11 | Tự cài theo `package.json`, từ OpenUPM | Các hàm `async` |
+| Ít nhất một dịch vụ | [`com.riseon.analytics.firebase`](../Firebase/README.md) (Google Analytics) hoặc [`com.riseon.analytics.appsflyer`](../AppsFlyer/README.md) (AppsFlyer): nút **Install** trên thanh của dịch vụ ở trang cài đặt, hoặc thêm vào manifest | Nơi sự kiện được gửi tới |
 
-| Package | Dịch vụ |
-|---|---|
-| [`com.riseon.analytics.firebase`](../Firebase/README.md) | Google Analytics |
-| [`com.riseon.analytics.appsflyer`](../AppsFlyer/README.md) | AppsFlyer |
+"Tự cài" là Package Manager tự lấy theo version từ Unity Registry và các registry khai
+trong manifest, cả khi cài pack bằng git URL. Odin không có trên UPM nên phải cài vào
+project trước. Thiếu Odin thì project báo một lỗi từ `RiseOn.Analytics.Requirements`.
 
 ## Cài đặt
 
-Thêm vào `Packages/manifest.json`:
+**Registry RiseOn** (khuyên dùng): thêm registry RiseOn với scope `com.riseon`, và
+OpenUPM với scope `com.cysharp`, `com.google` (UniTask, External Dependency Manager
+của `com.riseon.consent`), vào `Packages/manifest.json`, rồi thêm package:
 
 ```json
 {
-  "dependencies": {
-    "com.riseon.analytics": "1.0.1"
-  },
   "scopedRegistries": [
-    { "name": "RiseOn", "url": "https://upm.riseongamestudio.com", "scopes": [ "com.riseon" ] },
-    { "name": "OpenUPM", "url": "https://package.openupm.com", "scopes": [ "com.cysharp", "com.google" ] }
-  ]
+    {
+      "name": "RiseOn",
+      "url": "https://upm.riseongamestudio.com",
+      "scopes": ["com.riseon"]
+    },
+    {
+      "name": "OpenUPM",
+      "url": "https://package.openupm.com",
+      "scopes": ["com.cysharp", "com.google"]
+    }
+  ],
+  "dependencies": {
+    "com.riseon.analytics": "1.0.2"
+  }
 }
 ```
+
+**Git URL**: phụ thuộc vẫn lấy theo version từ registry, nên manifest cần OpenUPM như ví
+dụ trên; `com.riseon.utils` và `com.riseon.consent` lấy từ registry RiseOn, hoặc cài
+bằng git URL trước theo thứ tự này. Rồi *Package Manager → + → Add package from git
+URL*:
+
+```
+https://github.com/riseongamestudio/Analytics.git?path=/Core
+```
+
+**Thư mục local**: `"com.riseon.analytics": "file:D:/path/to/Analytics/Core"`.
 
 ## Dùng trong game
 
@@ -74,7 +109,7 @@ Inspector của asset chỉ có nút mở trang này.
 ## Sự kiện
 
 Mục **Events** liệt kê sự kiện game log, mỗi dòng một sự kiện: **Name** là tên gửi
-lên dịch vụ và cũng là tên thành viên trong `AnalyticsEvent` (trùng từ khoá C# thì
+lên dịch vụ và cũng là tên thành viên trong `AnalyticsEvent` (trùng từ khóa C# thì
 thêm `@`), **Description** thành doc comment của thành viên đó. Nút **+** trên thanh
 thêm dòng mới.
 
@@ -136,3 +171,11 @@ Phần Editor gọi `AnalyticsEditor.RegisterService` trong một
 `[InitializeOnLoadMethod]` để có dòng trong mục Services và chặn build khi thiếu
 thiết lập. Dịch vụ có luật riêng cho tên sự kiện thì truyền `eventProblems`, để trang
 báo lỗi từng sự kiện vi phạm.
+
+## Lịch sử thay đổi
+
+Xem [CHANGELOG.md](CHANGELOG.md).
+
+## Giấy phép
+
+MIT, xem [LICENSE.md](LICENSE.md).

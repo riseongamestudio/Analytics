@@ -22,7 +22,9 @@ namespace RiseOn.Analytics.AppsFlyer {
             AnalyticsSdk.Register(new AppsFlyerSink());
         }
 
-        public IEnumerable<string> Check(string name, IReadOnlyList<AnalyticsParameter> parameters) => Enumerable.Empty<string>();
+        public IEnumerable<string> Check(string name, IReadOnlyList<AnalyticsParameter> parameters) {
+            return Enumerable.Empty<string>();
+        }
 
         public async UniTask<bool> StartAsync() {
             var consent = await ConsentFlow.WaitUntilCompleteAsync();

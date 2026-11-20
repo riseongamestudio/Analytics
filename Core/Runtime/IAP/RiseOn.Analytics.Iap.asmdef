@@ -12,14 +12,14 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [
-        "RISEON_ANALYTICS_IAP",
+        "ANALYTICS_SUPPORT_IAP",
         "ODIN_INSPECTOR"
     ],
     "versionDefines": [
         {
             "name": "com.riseon.iap",
             "expression": "0.0.1",
-            "define": "RISEON_ANALYTICS_IAP"
+            "define": "ANALYTICS_SUPPORT_IAP"
         }
     ],
     "noEngineReferences": false

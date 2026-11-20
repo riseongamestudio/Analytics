@@ -9,17 +9,16 @@ using UnityEngine;
 
 namespace RiseOn.Analytics.Editor {
     /// <summary>
-    /// The events as the pack's source generator reads them, one "id, name, description" line each, split by tabs; it compiles them into
-    /// RiseOn.Analytics as <see cref="AnalyticsEvent"/>.<br/>
-    /// Written when Apply is pressed or chosen as the settings page closes, and when the asset is imported from elsewhere (a pull, a merge) while
-    /// the page is closed; never by hand. Apply renames the members the project's scripts name too, so they keep compiling.
+    /// The events as the pack's source generator reads them, one "id, name, description" line each, split by tabs; it compiles them into RiseOn.Analytics as <see cref="AnalyticsEvent"/>.<br/>
+    /// Written when Apply is pressed or chosen as the settings page closes, and when the asset is imported from elsewhere (a pull, a merge) while the page is closed; never by hand.<br/>
+    /// Apply renames the members the project's scripts name too, so they keep compiling.
     /// </summary>
     internal sealed class AnalyticsEventsFile : AssetPostprocessor {
         // Unity hands a project's *.{generator assembly}.additionalfile to that generator.
         internal const string FilePath = "Assets/RiseOn/Analytics/Events.RiseOnAnalyticsGenerator.additionalfile";
 
         /// <summary>While the settings page draws: it saves the asset on every edit, and writes the file only when Apply is pressed or chosen as it closes.</summary>
-        internal static bool Held;
+        internal static bool held;
 
         // The events as they were the last time the page saw them match the file, for Revert. In Library, as only this machine kept them.
         private const string AppliedPath = "Library/RiseOn/AnalyticsEventsApplied.json";
@@ -51,8 +50,7 @@ namespace RiseOn.Analytics.Editor {
         }
 
         /// <summary>
-        /// Writes the file when its text would change and the events have no problem, renaming the members the project's scripts name first;
-        /// Unity recompiles after.
+        /// Writes the file when its text would change and the events have no problem, renaming the members the project's scripts name first; Unity recompiles after.
         /// </summary>
         internal static void Sync(AnalyticsSettings settings) {
             Number(settings);
@@ -96,7 +94,9 @@ namespace RiseOn.Analytics.Editor {
             AssetDatabase.SaveAssetIfDirty(settings);
         }
 
-        private static string FileText() => File.Exists(FilePath) ? File.ReadAllText(FilePath) : "";
+        private static string FileText() {
+            return File.Exists(FilePath) ? File.ReadAllText(FilePath) : "";
+        }
 
         private static string LoadAppliedJson() {
             appliedJson ??= File.Exists(AppliedPath) ? File.ReadAllText(AppliedPath) : "";
@@ -119,8 +119,7 @@ namespace RiseOn.Analytics.Editor {
 
         /// <summary>
         /// A random positive id no event of <paramref name="settings"/> has.<br/>
-        /// Random, as Localization's DistributedUIDGenerator keeps key ids apart across machines, so events that two branches add do not meet on
-        /// one id; 31 bits, as Unity serializes enums of 32 bits or smaller.
+        /// Random, as Localization's DistributedUIDGenerator keeps key ids apart across machines, so events that two branches add do not meet on one id; 31 bits, as Unity serializes enums of 32 bits or smaller.
         /// </summary>
         internal static int NewId(AnalyticsSettings settings) {
             while (true) {
@@ -156,7 +155,7 @@ namespace RiseOn.Analytics.Editor {
 
         // A pull or a merge changed the settings, or someone deleted the file.
         private static void OnPostprocessAllAssets(string[] imported, string[] deleted, string[] moved, string[] movedFrom) {
-            if (Held) return;
+            if (held) return;
             if (!imported.Any(path => Path.GetFileNameWithoutExtension(path) is AnalyticsSettings.ResourceName) && !deleted.Contains(FilePath)) return;
 
             var settings = SettingsAssetUtils.Find<AnalyticsSettings>(AnalyticsSettings.ResourceName);

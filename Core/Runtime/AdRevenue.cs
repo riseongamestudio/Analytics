@@ -29,6 +29,8 @@
             Placement = placement;
         }
 
-        public override string ToString() => $"{Mediation}/{Network} {Format} {UnitId}: {Value} {Currency}";
+        public override string ToString() {
+            return $"{Mediation}/{Network} {Format} {UnitId}: {Value} {Currency}";
+        }
     }
 }

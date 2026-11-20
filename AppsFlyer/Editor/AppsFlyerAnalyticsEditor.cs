@@ -7,7 +7,7 @@ using UnityEditor;
 namespace RiseOn.Analytics.AppsFlyer.Editor {
     /// <summary>AppsFlyer's section of Project Settings > RiseOn > Analytics: its keys, and a build stop when one is missing.</summary>
     internal static class AppsFlyerAnalyticsEditor {
-        private static readonly Regex AppleAppId = new(@"^\d+$");
+        private static readonly Regex appleAppId = new(@"^\d+$");
 
         private static readonly SettingsTree tree = new();
 
@@ -28,7 +28,7 @@ namespace RiseOn.Analytics.AppsFlyer.Editor {
             }
 
             var appId = settings ? settings.AppleAppId : "";
-            if (!AppleAppId.IsMatch(appId)) {
+            if (!appleAppId.IsMatch(appId)) {
                 yield return new SettingsIssue(BuildTarget.iOS, true, fieldAsset: settings, fieldPath: "appleAppId", message: appId.Length == 0 ? "AppsFlyer's App Store ID is empty: the digits of the game's App Store link, without \"id\"." : $"AppsFlyer's App Store ID \"{appId}\" is not one, which is only digits.");
             }
         }

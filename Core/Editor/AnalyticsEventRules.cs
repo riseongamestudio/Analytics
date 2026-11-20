@@ -8,14 +8,14 @@ namespace RiseOn.Analytics.Editor {
     /// <summary>What stops the events from compiling into <see cref="AnalyticsEvent"/> or from reaching a service, each with the name to edit.</summary>
     internal static class AnalyticsEventRules {
         // A member the generator can write, in ASCII, as every service's narrower rule is.
-        private static readonly Regex Member = new("^[A-Za-z_][A-Za-z0-9_]*$");
+        private static readonly Regex member = new("^[A-Za-z_][A-Za-z0-9_]*$");
 
         public static IEnumerable<SettingsIssue> Issues(AnalyticsSettings settings) {
             var events = settings.Events;
             for (var i = 0; i < events.Count; i++) {
                 var name = events[i].Name ?? "";
                 var path = Path(i);
-                if (!Member.IsMatch(name)) {
+                if (!member.IsMatch(name)) {
                     yield return Issue(settings, $"\"{name}\" is not an event name: a letter or underscore, then letters, digits or underscores.", path);
                     continue;
                 }
@@ -23,7 +23,7 @@ namespace RiseOn.Analytics.Editor {
                 if (name == "value__") yield return Issue(settings, "C# keeps value__ for itself in every enum, so no event can be value__.", path);
 
                 // Each installed service's own rules, as it would refuse the event at run time.
-                foreach (var service in AnalyticsEditor.Services.Where(service => service.EventProblems != null)) {
+                foreach (var service in AnalyticsEditor.services.Where(service => service.EventProblems != null)) {
                     foreach (var problem in service.EventProblems(name)) yield return Issue(settings, $"{service.Title}: {problem}.", path);
                 }
             }

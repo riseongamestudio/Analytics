@@ -1,22 +1,71 @@
-# RiseOn Analytics AppsFlyer
+# RiseOn.Analytics.AppsFlyer
 
 AppsFlyer làm một dịch vụ của [`com.riseon.analytics`](../Core/README.md).
 
+Package `com.riseon.analytics.appsflyer`, namespace `RiseOn.Analytics.AppsFlyer`.
+
+## Mục lục
+
+- [Yêu cầu](#yêu-cầu)
+- [Cài đặt](#cài-đặt)
+- [Cài đặt của project](#cài-đặt-của-project)
+- [Khởi động](#khởi-động)
+- [Gửi gì](#gửi-gì)
+- [Lịch sử thay đổi](#lịch-sử-thay-đổi)
+- [Giấy phép](#giấy-phép)
+
+## Yêu cầu
+
+| Phụ thuộc | Cách có | Dùng cho |
+|---|---|---|
+| Unity 6000.3 | | Bản đang dùng để phát triển |
+| [Odin Inspector](https://odininspector.com) | Cài tay từ Asset Store | Các mục của AppsFlyer trên trang Analytics |
+| `com.riseon.analytics` 1.0.2 | Tự cài theo `package.json` | API mà game gọi |
+| `appsflyer-unity-plugin` 7.0.2 | Tự cài theo `package.json`, từ registry RiseOn | AppsFlyer SDK |
+| `com.cysharp.unitask` 2.5.11 | Tự cài theo `package.json`, từ OpenUPM | Các hàm `async` |
+
+"Tự cài" là Package Manager tự lấy theo version từ Unity Registry và các registry khai
+trong manifest, cả khi cài pack bằng git URL. Odin không có trên UPM nên phải cài vào
+project trước. Thiếu Odin thì project báo một lỗi từ
+`RiseOn.Analytics.AppsFlyer.Requirements`.
+
 ## Cài đặt
+
+**Registry RiseOn** (khuyên dùng): thêm registry RiseOn với scope `com.riseon`,
+`appsflyer-unity-plugin`, và OpenUPM với scope `com.cysharp`, `com.google`, vào
+`Packages/manifest.json`, rồi thêm package. Trang cài đặt của `com.riseon.analytics`
+cũng có nút **Install** cho pack này.
 
 ```json
 {
-  "dependencies": {
-    "com.riseon.analytics.appsflyer": "1.0.1"
-  },
   "scopedRegistries": [
-    { "name": "RiseOn", "url": "https://upm.riseongamestudio.com", "scopes": [ "com.riseon", "appsflyer-unity-plugin" ] },
-    { "name": "OpenUPM", "url": "https://package.openupm.com", "scopes": [ "com.cysharp", "com.google" ] }
-  ]
+    {
+      "name": "RiseOn",
+      "url": "https://upm.riseongamestudio.com",
+      "scopes": ["com.riseon", "appsflyer-unity-plugin"]
+    },
+    {
+      "name": "OpenUPM",
+      "url": "https://package.openupm.com",
+      "scopes": ["com.cysharp", "com.google"]
+    }
+  ],
+  "dependencies": {
+    "com.riseon.analytics.appsflyer": "1.0.2"
+  }
 }
 ```
 
-AppsFlyer 7 cần Unity 2023.1 trở lên.
+**Git URL**: phụ thuộc vẫn lấy theo version từ registry, nên manifest cần đủ các
+registry như ví dụ trên, vì SDK AppsFlyer chỉ có trên registry RiseOn. Rồi
+*Package Manager → + → Add package from git URL*:
+
+```
+https://github.com/riseongamestudio/Analytics.git?path=/AppsFlyer
+```
+
+**Thư mục local**:
+`"com.riseon.analytics.appsflyer": "file:D:/path/to/Analytics/AppsFlyer"`.
 
 ## Cài đặt của project
 
@@ -53,3 +102,11 @@ Game cho trẻ em (`Child Directed` trong Consent) thì AppsFlyer không khởi 
 
 Mặc định AppsFlyer nhận mọi sự kiện (**All** trên thanh **Events** của dòng AppsFlyer);
 chọn **Selected** rồi thêm vào list những sự kiện chiến dịch cần để chỉ gửi chúng.
+
+## Lịch sử thay đổi
+
+Xem [CHANGELOG.md](CHANGELOG.md).
+
+## Giấy phép
+
+MIT, xem [LICENSE.md](LICENSE.md).

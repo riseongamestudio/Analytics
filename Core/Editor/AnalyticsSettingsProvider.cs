@@ -10,15 +10,14 @@ using UnityEngine;
 
 namespace RiseOn.Analytics.Editor {
     /// <summary>
-    /// Project Settings > RiseOn > Analytics: what blocks the build, what the studio's other packs report by themselves, the services, each with its package, its own<br/>
-    /// fields and the events it takes, the Editor's Console first, then the game's events.<br/>
+    /// Project Settings > RiseOn > Analytics: what blocks the build, what the studio's other packs report by themselves, the services, each with its package, its own fields and the events it takes, the Editor's Console first, then the game's events.<br/>
     /// Edits go straight to the asset, with undo; the events file waits for Apply or for the page to close, since writing it recompiles.<br/>
     /// The settings asset's Inspector only opens this page.
     /// </summary>
     internal static class AnalyticsSettingsProvider {
         internal const string PagePath = "Project/RiseOn/Analytics";
 
-        private static readonly (string Name, bool Value)[] EventModes = { ("All", false), ("Selected", true) };
+        private static readonly (string Name, bool Value)[] eventModes ={ ("All", false), ("Selected", true) };
         private const string EventsTooltip = "The events the service takes; ad revenue, purchases and user data go to every service whatever this says.";
 
         // Each service's list of events, by its id, as a list keeps its own drag.
@@ -35,7 +34,9 @@ namespace RiseOn.Analytics.Editor {
         private static bool reloading;
 
         [InitializeOnLoadMethod]
-        private static void WatchReload() => AssemblyReloadEvents.beforeAssemblyReload += () => reloading = true;
+        private static void WatchReload() {
+            AssemblyReloadEvents.beforeAssemblyReload += () => reloading = true;
+        }
 
         // The pack's services, each listed whether its package is in the project or not, with its folder in the Analytics repo, beside Core.
         private static readonly PackAdapters services = new("RiseOn.Analytics.Services", typeof(AnalyticsSettings)
@@ -55,13 +56,13 @@ namespace RiseOn.Analytics.Editor {
             return new SettingsProvider(PagePath, SettingsScope.Project) {
                 guiHandler = _ => {
                     using var page = SettingsPage.Begin();
-                    AnalyticsEventsFile.Held = true;
+                    AnalyticsEventsFile.held = true;
                     drawn = true;
                     Draw(LoadOrCreate());
                 }
               , deactivateHandler = () => {
                     // Leaving or closing the window asks once, for every edit made here: one write and one recompile, or none.
-                    AnalyticsEventsFile.Held = false;
+                    AnalyticsEventsFile.held = false;
                     var settings = Find();
                     if (settings && drawn && !reloading && AnalyticsEventsFile.IsPending(settings)) AskOnLeave(settings);
                     drawn    = false;
@@ -79,8 +80,8 @@ namespace RiseOn.Analytics.Editor {
 
             var root = tree.Begin(settings);
             using (new Section("Integrations", "What the studio's other packs report by themselves, with no call from the game.")) {
-                DrawFromPack(root.Children["adRevenueFromAds"], "com.riseon.ads", AdsInstalled);
-                DrawFromPack(root.Children["purchasesFromIap"], "com.riseon.iap", IapInstalled);
+                DrawFromPack(root.Children["adRevenueFromAds"], "com.riseon.ads", adsInstalled);
+                DrawFromPack(root.Children["purchasesFromIap"], "com.riseon.iap", iapInstalled);
             }
 
             DrawServices(settings, root);
@@ -128,16 +129,16 @@ namespace RiseOn.Analytics.Editor {
         // The Editor first, as every project has it; then every service the project has and every one of the pack's it lacks, by name.
         private static List<ServiceRow> ServiceRows() {
             var shown = new List<ServiceRow> { new("Editor", AnalyticsSdk.EditorSinkId, null, null, null) };
-            var held = AnalyticsEditor.Services.Select(service => {
+            var held = AnalyticsEditor.services.Select(service => {
                 var adapter = services.All.Where(entry => entry.Package == service.Package).Select(entry => (PackAdapter?)entry).FirstOrDefault();
                 return new ServiceRow(service.Title, service.Id, service, adapter, adapter is { } own ? services.Row(own) : null);
             });
-            var missing = services.All.Where(adapter => AnalyticsEditor.Services.All(service => service.Package != adapter.Package)).Select(adapter => new ServiceRow(adapter.Name, null, null, adapter, services.Missing(adapter)));
+            var missing = services.All.Where(adapter => AnalyticsEditor.services.All(service => service.Package != adapter.Package)).Select(adapter => new ServiceRow(adapter.Name, null, null, adapter, services.Missing(adapter)));
             shown.AddRange(held.Concat(missing).OrderBy(row => row.Title, System.StringComparer.Ordinal));
             return shown;
         }
 
-        private static readonly GUIContent EditorTitle = new("Editor", "The Editor's Console, which prints what the game logs; the Editor sends nothing to the services, as their SDKs are native.");
+        private static readonly GUIContent editorTitle = new("Editor", "The Editor's Console, which prints what the game logs; the Editor sends nothing to the services, as their SDKs are native.");
 
         // At the value column's end, as a package's Uninstall: the Editor's Console on or off. Off, its row stays folded, as nothing prints.
         private static bool DrawEnable(Rect value, InspectorProperty toggle) {
@@ -170,7 +171,7 @@ namespace RiseOn.Analytics.Editor {
                 var on  = DrawEnable(value, root.Children["logInEditor"]);
                 // Turning it on opens the row, as a toggled section opens.
                 if (on && !was) open = true;
-                using (new EditorGUI.DisabledScope(!on)) open = EditorGUI.Foldout(prefix, on && open, EditorTitle, true) && on;
+                using (new EditorGUI.DisabledScope(!on)) open = EditorGUI.Foldout(prefix, on && open, editorTitle, true) && on;
             } else {
                 open = EditorGUI.Foldout(row.Package == null ? line : prefix, open, new GUIContent(row.Title, row.Service.Tooltip), true);
             }
@@ -196,8 +197,8 @@ namespace RiseOn.Analytics.Editor {
         }
 
         // A package change reloads the domain, which asks again.
-        private static readonly bool AdsInstalled = UnityEditor.PackageManager.PackageInfo.FindForPackageName("com.riseon.ads") != null;
-        private static readonly bool IapInstalled = UnityEditor.PackageManager.PackageInfo.FindForPackageName("com.riseon.iap") != null;
+        private static readonly bool adsInstalled = UnityEditor.PackageManager.PackageInfo.FindForPackageName("com.riseon.ads") != null;
+        private static readonly bool iapInstalled = UnityEditor.PackageManager.PackageInfo.FindForPackageName("com.riseon.iap") != null;
 
         // Without the package nothing reports to send, so the toggle shows off and cannot change.
         private static void DrawFromPack(InspectorProperty property, string package, bool installed) {
@@ -259,7 +260,7 @@ namespace RiseOn.Analytics.Editor {
         }
 
         // Puts @ before a C# keyword, as the pack's source generator does.
-        private static readonly Microsoft.CSharp.CSharpCodeProvider CSharp = new();
+        private static readonly Microsoft.CSharp.CSharpCodeProvider csharp = new();
 
         private const float NameLabel        = 45;
         private const float DescriptionLabel = 75;
@@ -276,7 +277,7 @@ namespace RiseOn.Analytics.Editor {
             var descriptionText = Rect.MinMaxRect(descriptionRect.x + DescriptionLabel, line.y, line.xMax, line.yMax);
 
             var text = name.ValueEntry.WeakSmartValue as string ?? "";
-            EditorGUI.LabelField(new Rect(nameRect.x, line.y, NameLabel, line.height), new GUIContent("Name", $"What the services get; AnalyticsEvent.{CSharp.CreateEscapedIdentifier(text)} in code"));
+            EditorGUI.LabelField(new Rect(nameRect.x, line.y, NameLabel, line.height), new GUIContent("Name", $"What the services get; AnalyticsEvent.{csharp.CreateEscapedIdentifier(text)} in code"));
             EditorGUI.BeginChangeCheck();
             var newName = EditorGUI.DelayedTextField(nameField, text);
             if (EditorGUI.EndChangeCheck()) name.ValueEntry.WeakSmartValue = newName.Trim();
@@ -318,7 +319,7 @@ namespace RiseOn.Analytics.Editor {
 
             // The list's own bar picks All or Selected, so All is the bar alone.
             using var section = new Section("Events", EventsTooltip, buttons: list == null ? 0 : 1, padded: false, barValue: true, barOnly: list == null);
-            ChoiceFieldUtils.Value(section.BarValue, EventModes, only, picked => {
+            ChoiceFieldUtils.Value(section.BarValue, eventModes, only, picked => {
                 Undo.RecordObject(settings, "Change Analytics Events");
                 settings.SetOnlyListed(id, picked);
                 EditorUtility.SetDirty(settings);
@@ -347,7 +348,7 @@ namespace RiseOn.Analytics.Editor {
                 foreach (var issue in AnalyticsEventRules.Issues(settings)) yield return issue;
             }
 
-            foreach (var service in AnalyticsEditor.Services) {
+            foreach (var service in AnalyticsEditor.services) {
                 if (service.Issues == null) continue;
                 foreach (var issue in service.Issues()) yield return issue;
             }

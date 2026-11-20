@@ -8,23 +8,23 @@ using Microsoft.CodeAnalysis.Text;
 
 namespace RiseOn.Analytics.Generator {
     /// <summary>
-    /// Compiles into RiseOn.Analytics the events the settings page lists: the enum AnalyticsEvent, numbered by each event's id, and the name each
-    /// member sends.<br/>
-    /// Members are named by the event as written, with @ before a C# keyword. Nothing is written to disk, so nobody can edit it.
+    /// Compiles into RiseOn.Analytics the events the settings page lists: the enum AnalyticsEvent, numbered by each event's id, and the name each member sends.<br/>
+    /// Members are named by the event as written, with @ before a C# keyword.<br/>
+    /// Nothing is written to disk, so nobody can edit it.
     /// </summary>
     [Generator]
     public sealed class RiseOnAnalyticsGenerator : ISourceGenerator {
         private const string PackAssembly = "RiseOn.Analytics";
         private const string EventsFile   = ".RiseOnAnalyticsGenerator.additionalfile";
 
-        private static readonly DiagnosticDescriptor BadLine = new(
+        private static readonly DiagnosticDescriptor badLine = new(
             "RISEONAN001", "Unreadable event line", "{0} line {1} is not 'id, name, description' split by tabs; open Project Settings > RiseOn > Analytics to write it again",
             "RiseOn.Analytics", DiagnosticSeverity.Error, true);
 
         public void Initialize(GeneratorInitializationContext context) { }
 
         public void Execute(GeneratorExecutionContext context) {
-            if (context.Compilation.AssemblyName != PackAssembly) return;
+            if (context.Compilation.AssemblyName is not PackAssembly) return;
 
             var members = new StringBuilder();
             var names   = new StringBuilder();
@@ -38,7 +38,7 @@ namespace RiseOn.Analytics.Generator {
 
                     var parts = line.Split('\t');
                     if (parts.Length != 3 || !int.TryParse(parts[0], out var id) || id <= 0 || !SyntaxFacts.IsValidIdentifier(parts[1])) {
-                        context.ReportDiagnostic(Diagnostic.Create(BadLine, Location.None, Path.GetFileName(file.Path), i + 1));
+                        context.ReportDiagnostic(Diagnostic.Create(badLine, Location.None, Path.GetFileName(file.Path), i + 1));
                         continue;
                     }
 
