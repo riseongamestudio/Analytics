@@ -1,10 +1,10 @@
 {
   "name": "com.riseon.analytics",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "displayName": "RiseOn Analytics",
   "description": "One static API for the game's analytics: events, ad revenue, purchases and user properties go to every installed service, each starting on its own once what it needs is ready and taking only the events the project settings send it",
   "unity": "6000.0",
-  "documentationUrl": "https://github.com/riseongamestudio/Analytics/blob/com.riseon.analytics/1.0.0/Core/README.md",
+  "documentationUrl": "https://github.com/riseongamestudio/Analytics/blob/com.riseon.analytics/1.0.1/Core/README.md",
   "author": {
     "name": "RiseOn"
   },

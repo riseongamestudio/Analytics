@@ -7,7 +7,7 @@ AppsFlyer làm một dịch vụ của [`com.riseon.analytics`](../Core/README.m
 ```json
 {
   "dependencies": {
-    "com.riseon.analytics.appsflyer": "1.0.0"
+    "com.riseon.analytics.appsflyer": "1.0.1"
   },
   "scopedRegistries": [
     { "name": "RiseOn", "url": "https://upm.riseongamestudio.com", "scopes": [ "com.riseon", "appsflyer-unity-plugin" ] },

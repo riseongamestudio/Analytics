@@ -1,0 +1,16 @@
+{
+    "name": "RiseOn.Analytics.Firebase.Requirements",
+    "rootNamespace": "RiseOn.Analytics.Firebase.Requirements",
+    "references": [],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": true
+}

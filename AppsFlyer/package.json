@@ -1,10 +1,10 @@
 {
   "name": "com.riseon.analytics.appsflyer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "displayName": "RiseOn Analytics AppsFlyer",
   "description": "AppsFlyer as a com.riseon.analytics service: started after the consent flow with the TCF data the consent form wrote, the dev key and App Store id from the project settings, ad revenue and purchases in AppsFlyer's own shapes",
   "unity": "6000.0",
-  "documentationUrl": "https://github.com/riseongamestudio/Analytics/blob/com.riseon.analytics.appsflyer/1.0.0/AppsFlyer/README.md",
+  "documentationUrl": "https://github.com/riseongamestudio/Analytics/blob/com.riseon.analytics.appsflyer/1.0.1/AppsFlyer/README.md",
   "author": {
     "name": "RiseOn"
   },

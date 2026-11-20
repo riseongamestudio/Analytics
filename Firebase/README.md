@@ -14,7 +14,7 @@ Google Analytics (analytics của Firebase) làm một dịch vụ của
 ```json
 {
   "dependencies": {
-    "com.riseon.analytics.firebase": "1.0.0"
+    "com.riseon.analytics.firebase": "1.0.1"
   },
   "scopedRegistries": [
     { "name": "RiseOn", "url": "https://upm.riseongamestudio.com", "scopes": [ "com.riseon", "com.google.firebase" ] },

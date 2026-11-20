@@ -12,7 +12,8 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [
-        "RISEON_ANALYTICS_ADS"
+        "RISEON_ANALYTICS_ADS",
+        "ODIN_INSPECTOR"
     ],
     "versionDefines": [
         {
