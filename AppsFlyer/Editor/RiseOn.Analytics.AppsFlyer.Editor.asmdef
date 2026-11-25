@@ -18,6 +18,12 @@
     "defineConstraints": [
         "ODIN_INSPECTOR"
     ],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.google.external-dependency-manager",
+            "expression": "1.2.187",
+            "define": "RISEON_EDM_SPM"
+        }
+    ],
     "noEngineReferences": false
 }

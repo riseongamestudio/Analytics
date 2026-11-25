@@ -4,6 +4,14 @@ Mọi thay đổi đáng kể của `com.riseon.analytics.appsflyer` được gh
 [Keep a Changelog](https://keepachangelog.com/vi/1.1.0/), đánh số theo
 [Semantic Versioning](https://semver.org/lang/vi/).
 
+## [Unreleased]
+
+### Thêm
+
+- Build iOS dừng khi External Dependency Manager lấy thư viện iOS qua Swift Package
+  Manager, vì cách đó làm game crash ngay khi mở; nút **Use CocoaPods** trên trang
+  Analytics tắt nó.
+
 ## [1.0.2] - 2026-11-20
 
 ### Đổi

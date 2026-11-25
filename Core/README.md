@@ -73,7 +73,9 @@ https://github.com/riseongamestudio/Analytics.git?path=/Core
 ## Dùng trong game
 
 ```csharp
-AnalyticsSdk.Log(AnalyticsEvent.level_start, new("level_id", "w1_l3"), new("retry", 2));
+AnalyticsSdk.Log(AnalyticsEvent.level_complete);
+AnalyticsSdk.Log(AnalyticsEvent.level_fail, "level_id", "w1_l3");
+AnalyticsSdk.Log(AnalyticsEvent.level_start, new AnalyticsParameter("level_id", "w1_l3"), new AnalyticsParameter("retry", 2));
 AnalyticsSdk.SetUserProperty("cohort", "b");
 ```
 
@@ -81,6 +83,9 @@ AnalyticsSdk.SetUserProperty("cohort", "b");
   thành một thành viên của enum `AnalyticsEvent` (xem [Sự kiện](#sự-kiện)).
 - Tham số có ba kiểu: chuỗi, số nguyên, số thực. Số luôn gửi theo dạng
   `InvariantCulture`, không phụ thuộc ngôn ngữ máy.
+- Một tham số thì truyền thẳng tên và giá trị. Đúng hai tham số thì phải viết
+  `new AnalyticsParameter(...)`: viết tắt `new(...)` thì C# không biết chọn hàm nào
+  và báo lỗi CS0121. Ba tham số trở lên thì viết tắt được.
 - Gọi từ thread của Unity.
 - Gọi trước khi dịch vụ khởi động thì pack giữ lại, khởi động xong mới gửi; mỗi
   dịch vụ giữ tối đa 1000 lời gọi, quá thì bỏ cái cũ nhất và log cảnh báo.

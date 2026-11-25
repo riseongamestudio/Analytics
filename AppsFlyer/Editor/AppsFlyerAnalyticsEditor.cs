@@ -31,6 +31,14 @@ namespace RiseOn.Analytics.AppsFlyer.Editor {
             if (!appleAppId.IsMatch(appId)) {
                 yield return new SettingsIssue(BuildTarget.iOS, true, fieldAsset: settings, fieldPath: "appleAppId", message: appId.Length == 0 ? "AppsFlyer's App Store ID is empty: the digits of the game's App Store link, without \"id\"." : $"AppsFlyer's App Store ID \"{appId}\" is not one, which is only digits.");
             }
+
+#if RISEON_EDM_SPM
+            // Through Swift Package Manager, AppsFlyer 7's framework is linked dynamically but not embedded.
+            if (Google.IOSResolver.SwiftPackageManagerEnabled) {
+                yield return new SettingsIssue(BuildTarget.iOS, true, "External Dependency Manager resolves the iOS libraries through Swift Package Manager, which links AppsFlyer's framework without embedding it, so the game crashes at launch; resolve them through CocoaPods.",
+                                                "Use CocoaPods", () => Google.IOSResolver.SwiftPackageManagerEnabled = false);
+            }
+#endif
         }
     }
 

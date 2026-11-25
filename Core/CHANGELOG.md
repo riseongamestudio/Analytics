@@ -4,6 +4,18 @@ Mọi thay đổi đáng kể của `com.riseon.analytics` được ghi ở đâ
 [Keep a Changelog](https://keepachangelog.com/vi/1.1.0/), đánh số theo
 [Semantic Versioning](https://semver.org/lang/vi/).
 
+## [Unreleased]
+
+### Thêm
+
+- `AnalyticsSdk.Log(event, name, value)` cho sự kiện một tham số, với giá trị chuỗi,
+  số nguyên hoặc số thực.
+
+### Đổi
+
+- Lời gọi `Log` với đúng hai tham số viết tắt `new(...)` không còn compile (CS0121):
+  viết `new AnalyticsParameter(...)`.
+
 ## [1.0.2] - 2026-11-20
 
 ### Đổi

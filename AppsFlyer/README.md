@@ -79,6 +79,11 @@ của asset chỉ có nút mở trang đó:
 | App Store ID | Phần số trong link App Store, không có chữ `id`. Trống hoặc có ký tự khác số thì build iOS dừng |
 | SDK Log | Log riêng của SDK AppsFlyer, chỉ trong Development Build |
 
+Build iOS còn dừng khi External Dependency Manager (từ 1.2.187) lấy thư viện iOS qua
+Swift Package Manager: theo cách đó framework của AppsFlyer 7 được link động mà không
+nhúng vào app, nên game crash ngay khi mở. Nút **Use CocoaPods** trên trang tắt Swift
+Package Manager, lưu vào `ProjectSettings/GvhProjectSettings.xml`.
+
 Dev key nằm trong mọi app dùng AppsFlyer, không phải bí mật.
 
 ## Khởi động

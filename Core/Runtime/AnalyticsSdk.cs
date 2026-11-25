@@ -71,6 +71,15 @@ namespace RiseOn.Analytics {
             Debug.LogError(message);
         }
 
+        /// <summary>As <see cref="Log(AnalyticsEvent, AnalyticsParameter[])"/> with one parameter.</summary>
+        public static void Log(AnalyticsEvent @event, string parameterName, string parameterValue) => Log(@event, new AnalyticsParameter(parameterName, parameterValue));
+
+        /// <summary>As <see cref="Log(AnalyticsEvent, AnalyticsParameter[])"/> with one parameter.</summary>
+        public static void Log(AnalyticsEvent @event, string parameterName, long parameterValue) => Log(@event, new AnalyticsParameter(parameterName, parameterValue));
+
+        /// <summary>As <see cref="Log(AnalyticsEvent, AnalyticsParameter[])"/> with one parameter.</summary>
+        public static void Log(AnalyticsEvent @event, string parameterName, double parameterValue) => Log(@event, new AnalyticsParameter(parameterName, parameterValue));
+
         public static void LogAdRevenue(in AdRevenue revenue) {
             if (Application.isEditor && Settings.LogInEditor) Debug.Log($"{nameof(AnalyticsSdk)}: ad revenue {revenue}");
 
