@@ -96,7 +96,7 @@ AnalyticsSdk.SetUserProperty("cohort", "b");
   Game tự log thì chỉ gọi `LogPurchase` khi cửa hàng đã xác nhận giao dịch, mỗi giao
   dịch một lần.
 - `LogAdRevenue` và `LogPurchase` gửi qua hàm chuẩn của từng dịch vụ, tới các dịch vụ
-  được tick trong bảng **Revenue** (xem [Doanh thu](#doanh-thu)).
+  được tick trong bảng **Standard Events** (xem [Event chuẩn](#event-chuẩn)).
 
 ## Cài đặt của project
 
@@ -110,26 +110,28 @@ Inspector của asset chỉ có nút mở trang này.
 | Integrations > Purchases from IAP | Bật (mặc định) thì mọi giao dịch `com.riseon.iap` xác nhận tự gửi tới mọi dịch vụ; tắt khi game tự gọi `LogPurchase`. Project không có `com.riseon.iap` thì ô tắt và không đổi được |
 | Services > Editor | Dòng đầu, không cần cài. Bật (mặc định) thì trong Editor, Console in sự kiện, doanh thu quảng cáo và giao dịch game báo; nút **Disable** ở cuối dòng tắt nó, **Enable** bật lại. Tắt thì không in và dòng gập lại. Bật hay tắt thì Editor cũng không gửi gì lên dịch vụ, vì SDK của các dịch vụ là native |
 | Services > từng dịch vụ | Mỗi dịch vụ đã cài, và mỗi dịch vụ của pack chưa cài, một dòng, xếp theo tên. Dòng của dịch vụ thuộc pack có ở cột giá trị: phiên bản trong project, **Install** khi chưa cài (Core từ registry thì chọn phiên bản; Core là thư mục local thì lấy thư mục `AppsFlyer`, `Firebase` cạnh `Core`), **Update** khi có bản mới hơn, **Uninstall** khi manifest ghi package đó. Thanh của mục có **Update All** và nút đọc lại phiên bản. Dịch vụ chưa cài chỉ có tên; dịch vụ đã cài gập mở phần riêng của nó |
-| Events ở cuối mỗi dòng của Services | Ô chọn trên thanh: **All** (mặc định) nhận mọi sự kiện; **Selected** chỉ nhận các sự kiện trong list mở ra dưới thanh, nút **+** thêm một sự kiện của `AnalyticsEvent` chưa có trong list, **×** bỏ ra. Với Editor là các sự kiện Console in. Doanh thu quảng cáo và giao dịch mua theo bảng Revenue; dữ liệu người chơi luôn gửi |
-| Revenue | Bảng doanh thu, xem [Doanh thu](#doanh-thu) |
+| Events ở cuối mỗi dòng của Services | Ô chọn trên thanh: **All** (mặc định) nhận mọi sự kiện; **Selected** chỉ nhận các sự kiện trong list mở ra dưới thanh, nút **+** thêm một sự kiện của `AnalyticsEvent` chưa có trong list, **×** bỏ ra. Với Editor là các sự kiện Console in. Event chuẩn theo bảng Standard Events; dữ liệu người chơi luôn gửi |
+| Standard Events | Bảng event chuẩn, gập được, xem [Event chuẩn](#event-chuẩn) |
 | Events | Các sự kiện game log, xem [Sự kiện](#sự-kiện) |
 
-## Doanh thu
+## Event chuẩn
 
-Mục **Revenue** là bảng hai dòng, **Ad revenue** và **Purchase**, mỗi cột một dịch vụ
-đã cài, cột **Editor** đầu tiên. Tick ở ô nào thì dịch vụ đó nhận dòng đó qua hàm
-chuẩn của nó; mặc định tick hết. Cột Editor là Console in ra, và mờ khi Editor bị
-**Disable** ở mục Services. Tên cột không đủ chỗ nằm ngang thì xoay dọc.
+Event chuẩn là event mà mỗi dịch vụ có sẵn hàm riêng, nuôi báo cáo có sẵn của dịch vụ
+đó. Mục **Standard Events** là bảng mỗi dòng một event chuẩn, hiện có **Ad Revenue**
+và **Purchase**, mỗi cột một dịch vụ đã cài, cột **Editor** đầu tiên. Tick ở ô nào
+thì dịch vụ đó nhận dòng đó qua hàm chuẩn của nó; mặc định tick hết, kể cả dòng thêm
+về sau. Cột Editor là Console in ra, và mờ khi Editor bị **Disable** ở mục Services.
+Tên cột không đủ chỗ nằm ngang thì xoay dọc.
 
 | | Firebase Analytics | AppsFlyer |
 |---|---|---|
-| Ad revenue | Sự kiện `ad_impression` | Hàm `logAdRevenue`, không phải sự kiện |
+| Ad Revenue | Sự kiện `ad_impression` | Hàm `logAdRevenue`, không phải sự kiện |
 | Purchase | Android: Analytics tự ghi khi Firebase đã liên kết Google Play, không thì pack log `in_app_purchase` (ô **Google Play Linked** trong dòng Firebase Analytics của Services). iOS: `LogAppleTransactionAsync` | Sự kiện `af_purchase` |
 
-Muốn log sự kiện chuẩn theo cách riêng của game, ví dụ `ad_impression` kèm tham số
+Muốn log event chuẩn theo cách riêng của game, ví dụ `ad_impression` kèm tham số
 thêm: bỏ tick dịch vụ đó ở dòng tương ứng, thêm sự kiện cùng tên ở mục **Events** rồi
-tự gọi `Log`. Còn tick mà vẫn có sự kiện cùng tên gửi tới dịch vụ đó thì doanh thu
-đếm hai lần, nên trang báo đỏ và build dừng.
+tự gọi `Log`. Còn tick mà vẫn có sự kiện cùng tên gửi tới dịch vụ đó thì bị đếm hai
+lần, nên trang báo đỏ và build dừng.
 
 
 ## Sự kiện
@@ -165,7 +167,7 @@ build dừng:
 | Tên sai luật của một dịch vụ đã cài, như Firebase Analytics: tối đa 40 ký tự, bắt đầu bằng chữ cái, không phải tên Firebase giữ chỗ (`first_open`, `session_start`...), không bắt đầu bằng `firebase_`, `google_`, `ga_` | Sửa tên |
 | Tên `value__`, C# giữ cho mọi enum | Sửa tên |
 | Hai dòng cùng tên | Xóa một dòng |
-| Tên trùng sự kiện doanh thu chuẩn của một dịch vụ đang tick dòng đó ở bảng Revenue, và dịch vụ đó nhận sự kiện này | Bỏ tick ở bảng Revenue, hoặc đổi tên |
+| Tên trùng tên event chuẩn của một dịch vụ đang tick dòng đó ở bảng Standard Events, và dịch vụ đó nhận sự kiện này | Bỏ tick ở bảng Standard Events, hoặc đổi tên |
 | Hai sự kiện cùng số (hai nhánh merge trúng cùng số ngẫu nhiên) | Xóa sự kiện mà field enum đã lưu không trỏ tới rồi thêm lại để có số mới |
 | File sự kiện chưa theo asset (trên trang chỉ báo vàng) | Bấm **Apply** hoặc **Revert** |
 
@@ -197,8 +199,8 @@ private static void Register() => AnalyticsSdk.Register(new MySink());
 Phần Editor gọi `AnalyticsEditor.RegisterService` trong một
 `[InitializeOnLoadMethod]` để có dòng trong mục Services và chặn build khi thiếu
 thiết lập. Dịch vụ có luật riêng cho tên sự kiện thì truyền `eventProblems`, để trang
-báo lỗi từng sự kiện vi phạm. Hàm doanh thu chuẩn của dịch vụ gửi sự kiện có tên thì
-truyền `adRevenueEvent`, `purchaseEvent`, để trang chặn sự kiện của game trùng tên đó.
+báo lỗi từng sự kiện vi phạm. Hàm chuẩn nào của dịch vụ gửi sự kiện có tên thì khai
+tên đó trong `standardEvents`, để trang chặn sự kiện của game trùng tên.
 
 ## Lịch sử thay đổi
 

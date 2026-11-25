@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using RiseOn.Utils.Editor;
@@ -28,15 +29,14 @@ namespace RiseOn.Analytics.Editor {
                 }
             }
 
-            // An event of the game's named as a service's own revenue event, sent to a service that also takes that revenue, counts it twice.
+            // An event of the game's named as a service's standard event, sent to a service that also takes that standard event, counts twice.
             for (var i = 0; i < events.Count; i++) {
                 var name = events[i].Name ?? "";
                 foreach (var service in AnalyticsEditor.services) {
-                    foreach (var revenue in new[] { AnalyticsRevenue.Ad, AnalyticsRevenue.Purchase }) {
-                        if (service.RevenueEvent(revenue) != name || !settings.Takes(service.Id, revenue) || !SendsEvent(settings, service.Id, events[i])) continue;
+                    foreach (AnalyticsStandardEvent standard in Enum.GetValues(typeof(AnalyticsStandardEvent))) {
+                        if (service.StandardEventName(standard) != name || !settings.Takes(service.Id, standard) || !SendsEvent(settings, service.Id, events[i])) continue;
 
-                        var row = revenue is AnalyticsRevenue.Ad ? "Ad revenue" : "Purchase";
-                        yield return Issue(settings, $"{service.Title} gets {name} twice, from its {row} column and from this event: untick it in the Revenue table to log {name} as the game's own event, or rename the event.", Path(i));
+                        yield return Issue(settings, $"{service.Title} gets {name} twice, as its {ObjectNames.NicifyVariableName(standard.ToString())} standard event and as this event: untick it in the Standard Events table to log {name} as the game's own event, or rename the event.", Path(i));
                     }
                 }
             }

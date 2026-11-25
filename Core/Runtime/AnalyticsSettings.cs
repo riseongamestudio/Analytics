@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace RiseOn.Analytics {
     /// <summary>
-    /// The project's analytics settings, edited in Project Settings > RiseOn > Analytics and kept in a Resources asset: which services take ad revenue and purchases, the game's events, which of them each service takes, and whether the Editor prints what it would send.
+    /// The project's analytics settings, edited in Project Settings > RiseOn > Analytics and kept in a Resources asset: which services take each standard event, the game's events, which of them each service takes, and whether the Editor prints what it would send.
     /// </summary>
     internal sealed class AnalyticsSettings : ScriptableObject {
         public const string ResourceName = "RiseOnAnalyticsSettings";
@@ -34,21 +34,25 @@ namespace RiseOn.Analytics {
             public IReadOnlyList<AnalyticsEvent> Events => events ?? (IReadOnlyList<AnalyticsEvent>)Array.Empty<AnalyticsEvent>();
         }
 
-        [SerializeField, LabelText("Log in Editor"), Tooltip("Prints the events, ad revenue and purchases the Editor's column and row take to the Console in the Editor, which sends nothing to the services, as their SDKs are native; the services' own logs are their SDK Log.")]
+        [SerializeField, LabelText("Log in Editor"), Tooltip("Prints the game's events and the standard events the Editor takes to the Console in the Editor, which sends nothing to the services, as their SDKs are native; the services' own logs are their SDK Log.")]
         private bool logInEditor = true;
 
-        [SerializeField, LabelText("Ad Revenue from Ads"), Tooltip("Sends the revenue of every ad com.riseon.ads shows to the services the Revenue table ticks; off for a game that calls AnalyticsSdk.LogAdRevenue itself.")]
+        [SerializeField, LabelText("Ad Revenue from Ads"), Tooltip("Sends the revenue of every ad com.riseon.ads shows to the services the Standard Events table ticks; off for a game that calls AnalyticsSdk.LogAdRevenue itself.")]
         private bool adRevenueFromAds = true;
 
-        [SerializeField, LabelText("Purchases from IAP"), Tooltip("Sends every purchase com.riseon.iap confirms to the services the Revenue table ticks; off for a game that calls AnalyticsSdk.LogPurchase itself.")]
+        [SerializeField, LabelText("Purchases from IAP"), Tooltip("Sends every purchase com.riseon.iap confirms to the services the Standard Events table ticks; off for a game that calls AnalyticsSdk.LogPurchase itself.")]
         private bool purchasesFromIap = true;
 
-        // The services, by id, that the Revenue table leaves out of each row: every service takes both until unticked.
+        // The ticks the Standard Events table took off, a service and a standard event each: every service takes every standard event
+        // until unticked, a kind added later included.
         [SerializeField]
-        private List<string> adRevenueOff = new();
+        private List<StandardEventOff> standardEventsOff = new();
 
-        [SerializeField]
-        private List<string> purchaseOff = new();
+        [Serializable]
+        private struct StandardEventOff {
+            public AnalyticsStandardEvent standardEvent;
+            public string sink;
+        }
 
         [SerializeField]
         private List<AnalyticsEventEntry> events = new();
@@ -75,17 +79,23 @@ namespace RiseOn.Analytics {
             else sinkEvents[index] = new SinkEvents(sink, onlyListed, new List<AnalyticsEvent>(sinkEvents[index].Events));
         }
 
-        /// <summary>Whether the service takes this revenue: its standard call for it, as the Revenue table ticks.</summary>
-        public bool Takes(string sink, AnalyticsRevenue revenue) => !Off(revenue).Contains(sink);
+        /// <summary>Whether the service takes the standard event through its standard call, as the Standard Events table ticks.</summary>
+        public bool Takes(string sink, AnalyticsStandardEvent standardEvent) {
+            if (standardEventsOff == null) return true;
 
-        /// <summary>Ticks or unticks the service in the revenue's row.</summary>
-        internal void SetTakes(string sink, AnalyticsRevenue revenue, bool on) {
-            var off = Off(revenue);
-            off.RemoveAll(id => id == sink);
-            if (!on) off.Add(sink);
+            foreach (var off in standardEventsOff) {
+                if (off.standardEvent == standardEvent && off.sink == sink) return false;
+            }
+
+            return true;
         }
 
-        private List<string> Off(AnalyticsRevenue revenue) => revenue is AnalyticsRevenue.Ad ? adRevenueOff ??= new List<string>() : purchaseOff ??= new List<string>();
+        /// <summary>Ticks or unticks the service in the standard event's row.</summary>
+        internal void SetTakes(string sink, AnalyticsStandardEvent standardEvent, bool on) {
+            standardEventsOff ??= new List<StandardEventOff>();
+            standardEventsOff.RemoveAll(off => off.standardEvent == standardEvent && off.sink == sink);
+            if (!on) standardEventsOff.Add(new StandardEventOff { standardEvent = standardEvent, sink = sink });
+        }
 
         /// <summary>Whether the service takes this event; user data always goes.</summary>
         public bool Sends(string sink, AnalyticsEvent @event) {

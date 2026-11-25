@@ -23,12 +23,10 @@ namespace RiseOn.Analytics.Editor {
 
             public readonly Func<string, IEnumerable<string>> EventProblems;
 
-            /// <summary>The event name of its standard ad revenue call, and of its purchase call; null for a call that is no event.</summary>
-            public readonly string AdRevenueEvent;
-            public readonly string PurchaseEvent;
+            private readonly IReadOnlyDictionary<AnalyticsStandardEvent, string> standardEvents;
 
             public Service(string id, string title, string tooltip, Action draw, Func<IEnumerable<SettingsIssue>> issues, string package, Func<string, IEnumerable<string>> eventProblems,
-                           string adRevenueEvent, string purchaseEvent) {
+                           IReadOnlyDictionary<AnalyticsStandardEvent, string> standardEvents) {
                 Id      = id;
                 Title   = title;
                 Tooltip = tooltip;
@@ -36,11 +34,11 @@ namespace RiseOn.Analytics.Editor {
                 Issues  = issues;
                 Package = package;
                 EventProblems = eventProblems;
-                AdRevenueEvent = adRevenueEvent;
-                PurchaseEvent  = purchaseEvent;
+                this.standardEvents = standardEvents;
             }
 
-            public string RevenueEvent(AnalyticsRevenue revenue) => revenue is AnalyticsRevenue.Ad ? AdRevenueEvent : PurchaseEvent;
+            /// <summary>The name of the event its call for the standard event sends; null for a call that is no event.</summary>
+            public string StandardEventName(AnalyticsStandardEvent standardEvent) => standardEvents != null && standardEvents.TryGetValue(standardEvent, out var name) ? name : null;
         }
 
         internal static readonly List<Service> services = new();
@@ -50,15 +48,14 @@ namespace RiseOn.Analytics.Editor {
         /// <param name="draw">Its own fields, drawn under its events; null for none.</param>
         /// <param name="issues">What its setup lacks; null for nothing to check.</param>
         /// <param name="eventProblems">Why it would refuse an event of the given name, as the page checks each event; null for no rule of its own.</param>
-        /// <param name="adRevenueEvent">The event its <see cref="IAnalyticsSink.LogAdRevenue"/> sends, such as ad_impression; null for a call that is no event. An event of the game's by that name, to a service that takes ad revenue, would count it twice.</param>
-        /// <param name="purchaseEvent">As <paramref name="adRevenueEvent"/>, for <see cref="IAnalyticsSink.LogPurchase"/>.</param>
+        /// <param name="standardEvents">The name of the event each of its standard calls sends, such as ad_impression for <see cref="AnalyticsStandardEvent.AdRevenue"/>; a call that sends no event of a name has no entry. An event of the game's by that name, to a service that takes the standard event too, would count twice.</param>
         // Not inlined, so the calling assembly is the service's own.
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void RegisterService(string id, string title, string tooltip = null, Action draw = null, Func<IEnumerable<SettingsIssue>> issues = null, Func<string, IEnumerable<string>> eventProblems = null,
-                                           string adRevenueEvent = null, string purchaseEvent = null) {
+                                           IReadOnlyDictionary<AnalyticsStandardEvent, string> standardEvents = null) {
             var package = PackageInfo.FindForAssembly(Assembly.GetCallingAssembly())?.name;
             services.RemoveAll(service => service.Id == id);
-            services.Add(new Service(id, title, tooltip, draw, issues, package, eventProblems, adRevenueEvent, purchaseEvent));
+            services.Add(new Service(id, title, tooltip, draw, issues, package, eventProblems, standardEvents));
             services.Sort((a, b) => string.CompareOrdinal(a.Title, b.Title));
         }
     }

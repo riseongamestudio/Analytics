@@ -13,7 +13,7 @@ namespace RiseOn.Analytics.Firebase.Editor {
             AnalyticsEditor.RegisterService(FirebaseAnalyticsSink.SinkId, "Firebase Analytics",
                 "Where EU rules apply, the consent form sets Analytics' consent mode once consent mode is on in AdMob > Privacy & messaging.",
                 () => tree.Draw(SettingsAssetUtils.LoadOrCreate<FirebaseAnalyticsSettings>(FirebaseAnalyticsSettings.ResourceName)), Issues, FirebaseAnalyticsSink.EventNameProblems,
-                adRevenueEvent: "ad_impression", purchaseEvent: "in_app_purchase");
+                new Dictionary<AnalyticsStandardEvent, string> { { AnalyticsStandardEvent.AdRevenue, "ad_impression" }, { AnalyticsStandardEvent.Purchase, "in_app_purchase" } });
         }
 
         private static IEnumerable<SettingsIssue> Issues() {
