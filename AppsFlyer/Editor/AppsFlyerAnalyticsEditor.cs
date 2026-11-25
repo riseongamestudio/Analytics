@@ -13,7 +13,8 @@ namespace RiseOn.Analytics.AppsFlyer.Editor {
 
         [InitializeOnLoadMethod]
         private static void Register() {
-            AnalyticsEditor.RegisterService("appsflyer", "AppsFlyer", draw: () => tree.Draw(SettingsAssetUtils.LoadOrCreate<AppsFlyerSettings>(AppsFlyerSettings.ResourceName)), issues: Issues);
+            AnalyticsEditor.RegisterService("appsflyer", "AppsFlyer", draw: () => tree.Draw(SettingsAssetUtils.LoadOrCreate<AppsFlyerSettings>(AppsFlyerSettings.ResourceName)), issues: Issues,
+                                            purchaseEvent: "af_purchase");
         }
 
         private static IEnumerable<SettingsIssue> Issues() {

@@ -80,18 +80,30 @@ namespace RiseOn.Analytics {
         /// <summary>As <see cref="Log(AnalyticsEvent, AnalyticsParameter[])"/> with one parameter.</summary>
         public static void Log(AnalyticsEvent @event, string parameterName, double parameterValue) => Log(@event, new AnalyticsParameter(parameterName, parameterValue));
 
+        /// <summary>
+        /// An ad's revenue, to each service the Revenue table of Project Settings > RiseOn > Analytics ticks, through its standard call: Google Analytics' ad_impression, AppsFlyer's logAdRevenue.<br/>
+        /// com.riseon.ads calls it for every ad it shows, unless the page's Ad Revenue from Ads is off.
+        /// </summary>
         public static void LogAdRevenue(in AdRevenue revenue) {
-            if (Application.isEditor && Settings.LogInEditor) Debug.Log($"{nameof(AnalyticsSdk)}: ad revenue {revenue}");
+            if (Application.isEditor && Settings.LogInEditor && Settings.Takes(EditorSinkId, AnalyticsRevenue.Ad)) Debug.Log($"{nameof(AnalyticsSdk)}: ad revenue {revenue}");
 
             var copy = revenue;
-            foreach (var sink in sinks) sink.Call(target => target.LogAdRevenue(copy));
+            foreach (var sink in sinks) {
+                if (Settings.Takes(sink.Target.Id, AnalyticsRevenue.Ad)) sink.Call(target => target.LogAdRevenue(copy));
+            }
         }
 
+        /// <summary>
+        /// A store purchase, once, after the store confirmed it, to each service the Revenue table of Project Settings > RiseOn > Analytics ticks, through its standard call: Google Analytics' in_app_purchase, AppsFlyer's af_purchase.<br/>
+        /// com.riseon.iap calls it for every purchase it confirms, unless the page's Purchases from IAP is off.
+        /// </summary>
         public static void LogPurchase(in PurchaseRevenue purchase) {
-            if (Application.isEditor && Settings.LogInEditor) Debug.Log($"{nameof(AnalyticsSdk)}: purchase {purchase}");
+            if (Application.isEditor && Settings.LogInEditor && Settings.Takes(EditorSinkId, AnalyticsRevenue.Purchase)) Debug.Log($"{nameof(AnalyticsSdk)}: purchase {purchase}");
 
             var copy = purchase;
-            foreach (var sink in sinks) sink.Call(target => target.LogPurchase(copy));
+            foreach (var sink in sinks) {
+                if (Settings.Takes(sink.Target.Id, AnalyticsRevenue.Purchase)) sink.Call(target => target.LogPurchase(copy));
+            }
         }
 
         public static void SetUserId(string id) {

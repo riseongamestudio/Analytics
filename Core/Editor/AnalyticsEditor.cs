@@ -23,7 +23,12 @@ namespace RiseOn.Analytics.Editor {
 
             public readonly Func<string, IEnumerable<string>> EventProblems;
 
-            public Service(string id, string title, string tooltip, Action draw, Func<IEnumerable<SettingsIssue>> issues, string package, Func<string, IEnumerable<string>> eventProblems) {
+            /// <summary>The event name of its standard ad revenue call, and of its purchase call; null for a call that is no event.</summary>
+            public readonly string AdRevenueEvent;
+            public readonly string PurchaseEvent;
+
+            public Service(string id, string title, string tooltip, Action draw, Func<IEnumerable<SettingsIssue>> issues, string package, Func<string, IEnumerable<string>> eventProblems,
+                           string adRevenueEvent, string purchaseEvent) {
                 Id      = id;
                 Title   = title;
                 Tooltip = tooltip;
@@ -31,7 +36,11 @@ namespace RiseOn.Analytics.Editor {
                 Issues  = issues;
                 Package = package;
                 EventProblems = eventProblems;
+                AdRevenueEvent = adRevenueEvent;
+                PurchaseEvent  = purchaseEvent;
             }
+
+            public string RevenueEvent(AnalyticsRevenue revenue) => revenue is AnalyticsRevenue.Ad ? AdRevenueEvent : PurchaseEvent;
         }
 
         internal static readonly List<Service> services = new();
@@ -41,12 +50,15 @@ namespace RiseOn.Analytics.Editor {
         /// <param name="draw">Its own fields, drawn under its events; null for none.</param>
         /// <param name="issues">What its setup lacks; null for nothing to check.</param>
         /// <param name="eventProblems">Why it would refuse an event of the given name, as the page checks each event; null for no rule of its own.</param>
+        /// <param name="adRevenueEvent">The event its <see cref="IAnalyticsSink.LogAdRevenue"/> sends, such as ad_impression; null for a call that is no event. An event of the game's by that name, to a service that takes ad revenue, would count it twice.</param>
+        /// <param name="purchaseEvent">As <paramref name="adRevenueEvent"/>, for <see cref="IAnalyticsSink.LogPurchase"/>.</param>
         // Not inlined, so the calling assembly is the service's own.
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public static void RegisterService(string id, string title, string tooltip = null, Action draw = null, Func<IEnumerable<SettingsIssue>> issues = null, Func<string, IEnumerable<string>> eventProblems = null) {
+        public static void RegisterService(string id, string title, string tooltip = null, Action draw = null, Func<IEnumerable<SettingsIssue>> issues = null, Func<string, IEnumerable<string>> eventProblems = null,
+                                           string adRevenueEvent = null, string purchaseEvent = null) {
             var package = PackageInfo.FindForAssembly(Assembly.GetCallingAssembly())?.name;
             services.RemoveAll(service => service.Id == id);
-            services.Add(new Service(id, title, tooltip, draw, issues, package, eventProblems));
+            services.Add(new Service(id, title, tooltip, draw, issues, package, eventProblems, adRevenueEvent, purchaseEvent));
             services.Sort((a, b) => string.CompareOrdinal(a.Title, b.Title));
         }
     }

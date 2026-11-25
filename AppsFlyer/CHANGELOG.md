@@ -8,6 +8,8 @@ Mọi thay đổi đáng kể của `com.riseon.analytics.appsflyer` được gh
 
 ### Thêm
 
+- Trang Analytics chặn sự kiện của game tên `af_purchase` khi AppsFlyer đang nhận
+  dòng Purchase của bảng Revenue.
 - Build iOS dừng khi External Dependency Manager lấy thư viện iOS qua Swift Package
   Manager, vì cách đó làm game crash ngay khi mở; nút **Use CocoaPods** trên trang
   Analytics tắt nó.

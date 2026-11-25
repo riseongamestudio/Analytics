@@ -89,10 +89,19 @@ namespace RiseOn.Analytics.Firebase {
             FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventAdImpression, parameters.ToArray());
         }
 
-        // Google Play purchases reach Analytics on their own once the Firebase project is linked to Play; App Store
-        // ones made with StoreKit 2, which Unity IAP 5 uses, only through this call:
+        // Google Play purchases reach Analytics on their own once the Firebase project is linked to Play, else as the in_app_purchase
+        // event the app logs; App Store ones made with StoreKit 2, which Unity IAP 5 uses, only through LogAppleTransactionAsync:
         // firebase.google.com/docs/analytics/unity/measure-in-app-purchases
         public void LogPurchase(in PurchaseRevenue purchase) {
+            if (Application.platform is RuntimePlatform.Android) {
+                if (FirebaseAnalyticsSettings.Load().GooglePlayLinked) return;
+
+                FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventInAppPurchase, new Parameter(FirebaseAnalytics.ParameterProductName, purchase.ProductId ?? ""),
+                                           new Parameter(FirebaseAnalytics.ParameterValue, (double) purchase.Value), new Parameter(FirebaseAnalytics.ParameterCurrency, purchase.Currency ?? ""),
+                                           new Parameter(FirebaseAnalytics.ParameterQuantity, purchase.Quantity));
+                return;
+            }
+
             if (Application.platform is not RuntimePlatform.IPhonePlayer) return;
 
             if (string.IsNullOrEmpty(purchase.TransactionId)) {

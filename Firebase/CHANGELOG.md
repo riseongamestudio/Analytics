@@ -4,6 +4,14 @@ Mọi thay đổi đáng kể của `com.riseon.analytics.firebase` được ghi
 [Keep a Changelog](https://keepachangelog.com/vi/1.1.0/), đánh số theo
 [Semantic Versioning](https://semver.org/lang/vi/).
 
+## [Unreleased]
+
+### Thêm
+
+- Ô **Google Play Linked** trong dòng Google Analytics của trang Analytics, bật sẵn.
+  Tắt khi project Firebase chưa liên kết Google Play: pack log `in_app_purchase` cho
+  mỗi giao dịch Android.
+
 ## [1.0.2] - 2026-11-20
 
 ### Đổi

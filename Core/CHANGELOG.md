@@ -10,6 +10,11 @@ Mọi thay đổi đáng kể của `com.riseon.analytics` được ghi ở đâ
 
 - `AnalyticsSdk.Log(event, name, value)` cho sự kiện một tham số, với giá trị chuỗi,
   số nguyên hoặc số thực.
+- Bảng **Revenue** trên trang settings: mỗi dịch vụ, và Console của Editor, nhận
+  doanh thu quảng cáo và giao dịch mua hay không. Trước đó mọi dịch vụ luôn nhận.
+- Trang báo đỏ khi một sự kiện của game trùng tên sự kiện doanh thu chuẩn của một
+  dịch vụ đang nhận dòng doanh thu đó, vì doanh thu sẽ đếm hai lần.
+- `AnalyticsEditor.RegisterService` nhận `adRevenueEvent` và `purchaseEvent`.
 
 ### Đổi
 

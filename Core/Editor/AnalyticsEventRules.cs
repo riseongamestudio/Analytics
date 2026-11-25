@@ -28,6 +28,19 @@ namespace RiseOn.Analytics.Editor {
                 }
             }
 
+            // An event of the game's named as a service's own revenue event, sent to a service that also takes that revenue, counts it twice.
+            for (var i = 0; i < events.Count; i++) {
+                var name = events[i].Name ?? "";
+                foreach (var service in AnalyticsEditor.services) {
+                    foreach (var revenue in new[] { AnalyticsRevenue.Ad, AnalyticsRevenue.Purchase }) {
+                        if (service.RevenueEvent(revenue) != name || !settings.Takes(service.Id, revenue) || !SendsEvent(settings, service.Id, events[i])) continue;
+
+                        var row = revenue is AnalyticsRevenue.Ad ? "Ad revenue" : "Purchase";
+                        yield return Issue(settings, $"{service.Title} gets {name} twice, from its {row} column and from this event: untick it in the Revenue table to log {name} as the game's own event, or rename the event.", Path(i));
+                    }
+                }
+            }
+
             foreach (var group in events.Select((entry, index) => (entry.Name, Index: index)).GroupBy(entry => entry.Name).Where(group => group.Count() > 1)) {
                 yield return Issue(settings, $"The event {group.Key} is listed {group.Count()} times.", Path(group.Last().Index));
             }
@@ -40,6 +53,16 @@ namespace RiseOn.Analytics.Editor {
         }
 
         private static string Path(int index) => $"events.Array.data[{index}].name";
+
+        // As AnalyticsSettings.Sends, by the event's id: an event added since the last Apply has no AnalyticsEvent member yet.
+        private static bool SendsEvent(AnalyticsSettings settings, string sink, AnalyticsEventEntry entry) {
+            foreach (var listed in settings.Sinks) {
+                if (listed.Sink != sink) continue;
+                return !listed.OnlyListed || listed.Events.Any(@event => (int) @event == entry.Id);
+            }
+
+            return true;
+        }
 
         private static SettingsIssue Issue(AnalyticsSettings settings, string message, string path) => new(BuildTarget.NoTarget, true, message, fieldAsset: settings, fieldPath: path);
     }

@@ -1,14 +1,31 @@
-﻿using RiseOn.Analytics.Editor;
+﻿using System.Collections.Generic;
+using RiseOn.Analytics.Editor;
+using RiseOn.Utils.Editor;
 using UnityEditor;
 
 namespace RiseOn.Analytics.Firebase.Editor {
-    /// <summary>Firebase's section of Project Settings > RiseOn > Analytics: the two settings that live outside Unity.</summary>
+    /// <summary>Google Analytics' section of Project Settings > RiseOn > Analytics: whether Google Play purchases reach it on their own, and the names its rules refuse.</summary>
     internal static class FirebaseAnalyticsEditor {
+        private static readonly SettingsTree tree = new();
+
         [InitializeOnLoadMethod]
         private static void Register() {
-            AnalyticsEditor.RegisterService("firebase", "Google Analytics",
-                "Google Play purchases reach Analytics once the Firebase project is linked to Google Play (Firebase console > Project settings > Integrations); App Store purchases go through AnalyticsSdk.LogPurchase. Where EU rules apply, the consent form sets Analytics' consent mode once consent mode is on in AdMob > Privacy & messaging.",
-                eventProblems: FirebaseAnalyticsSink.EventNameProblems);
+            AnalyticsEditor.RegisterService(FirebaseAnalyticsSink.SinkId, "Google Analytics",
+                "Where EU rules apply, the consent form sets Analytics' consent mode once consent mode is on in AdMob > Privacy & messaging.",
+                () => tree.Draw(SettingsAssetUtils.LoadOrCreate<FirebaseAnalyticsSettings>(FirebaseAnalyticsSettings.ResourceName)), Issues, FirebaseAnalyticsSink.EventNameProblems,
+                adRevenueEvent: "ad_impression", purchaseEvent: "in_app_purchase");
         }
+
+        private static IEnumerable<SettingsIssue> Issues() {
+            if (SettingsAssetUtils.OutsideResources<FirebaseAnalyticsSettings>(FirebaseAnalyticsSettings.ResourceName) is { } path) {
+                yield return new SettingsIssue(BuildTarget.NoTarget, true, $"{path} is outside a Resources folder, so the game cannot load Google Analytics' settings.", "Move it",
+                                                () => SettingsAssetUtils.MoveToResources<FirebaseAnalyticsSettings>(FirebaseAnalyticsSettings.ResourceName));
+            }
+        }
+    }
+
+    [CustomEditor(typeof(FirebaseAnalyticsSettings))]
+    internal sealed class FirebaseAnalyticsSettingsInspector : SettingsAssetInspector {
+        protected override string PagePath => "Project/RiseOn/Analytics";
     }
 }

@@ -3,6 +3,7 @@ using System.Linq;
 using RiseOn.Utils.Editor;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
+using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
@@ -10,7 +11,7 @@ using UnityEngine;
 
 namespace RiseOn.Analytics.Editor {
     /// <summary>
-    /// Project Settings > RiseOn > Analytics: what blocks the build, what the studio's other packs report by themselves, the services, each with its package, its own fields and the events it takes, the Editor's Console first, then the game's events.<br/>
+    /// Project Settings > RiseOn > Analytics: what blocks the build, what the studio's other packs report by themselves, the services, each with its package, its own fields and the events it takes, the Editor's Console first, then the two tables of events: the revenue each service has a standard call for, and the game's own events.<br/>
     /// Edits go straight to the asset, with undo; the events file waits for Apply or for the page to close, since writing it recompiles.<br/>
     /// The settings asset's Inspector only opens this page.
     /// </summary>
@@ -18,7 +19,7 @@ namespace RiseOn.Analytics.Editor {
         internal const string PagePath = "Project/RiseOn/Analytics";
 
         private static readonly (string Name, bool Value)[] eventModes ={ ("All", false), ("Selected", true) };
-        private const string EventsTooltip = "The events the service takes; ad revenue, purchases and user data go to every service whatever this says.";
+        private const string EventsTooltip = "The game's events the service takes; ad revenue and purchases follow the Revenue table, and user data goes to every service whatever this says.";
 
         // Each service's list of events, by its id, as a list keeps its own drag.
         private static readonly Dictionary<string, SectionRows> sentRows = new();
@@ -85,6 +86,7 @@ namespace RiseOn.Analytics.Editor {
             }
 
             DrawServices(settings, root);
+            DrawRevenue(settings);
             DrawEventList(settings, root.Children["events"]);
             tree.End();
         }
@@ -232,6 +234,80 @@ namespace RiseOn.Analytics.Editor {
 
             AnalyticsEventsFile.Revert(settings);
             GUIUtility.ExitGUI();
+        }
+
+        private static readonly (AnalyticsRevenue Revenue, GUIContent Label)[] revenues = {
+            (AnalyticsRevenue.Ad, new GUIContent("Ad revenue", "Each ad's revenue, from com.riseon.ads while Ad Revenue from Ads is on, or from the game's AnalyticsSdk.LogAdRevenue.")),
+            (AnalyticsRevenue.Purchase, new GUIContent("Purchase", "Each store purchase, once confirmed, from com.riseon.iap while Purchases from IAP is on, or from the game's AnalyticsSdk.LogPurchase."))
+        };
+
+        // Between two columns, and beside a header turned on its side.
+        private const float ColumnGap = 6;
+
+        // The value column's width at the table's last repaint, which the next frame lays the headers out by, so every event of a frame
+        // lays out alike; until then the headers lie flat.
+        private static float revenueWidth = float.MaxValue;
+
+        // The revenue rows, one column for each service the project has, the Editor first, as Unity's layer collision matrix: a tick sends
+        // the row to the service through its standard call. The headers stand on their side once side by side they would not fit.
+        private static void DrawRevenue(AnalyticsSettings settings) {
+            using var section = new Section("Revenue", "The revenue each service has a standard call for, which feeds its revenue reports; unticked, the service gets none of it, and the game may log the service's standard event as one of its own.");
+            var columns = new List<(string Id, GUIContent Title, string Event)> { (AnalyticsSdk.EditorSinkId, new GUIContent("Editor", "Prints it to the Console, while the Editor's Console is enabled under Services."), null) };
+            columns.AddRange(AnalyticsEditor.services.Select(service => (service.Id, new GUIContent(service.Title), (string) null)));
+
+            var line   = EditorGUIUtility.singleLineHeight;
+            var widths = columns.Select(column => EditorStyles.label.CalcSize(column.Title).x).ToList();
+            var flat   = widths.Sum() + ColumnGap * (columns.Count - 1) <= revenueWidth;
+            var cell   = line + ColumnGap;
+
+            // Flat, each column as wide as its header; on their side, as wide as a line, the header row as tall as the longest.
+            var header = SirenixEditorGUI.PrefixRect(EditorGUILayout.GetControlRect(false, flat ? line : widths.Max() + 4), out _);
+            if (Event.current.type is EventType.Repaint && !Mathf.Approximately(revenueWidth, header.width)) {
+                revenueWidth = header.width;
+                HandleUtility.Repaint();
+            }
+
+            var lefts = new List<float>();
+            var x     = header.x;
+            for (var i = 0; i < columns.Count; i++) {
+                lefts.Add(x);
+                var width = flat ? widths[i] : cell;
+                if (flat) {
+                    GUI.Label(new Rect(x, header.y, width, line), columns[i].Title);
+                } else {
+                    // Turned a quarter left about its bottom left corner, the text reads upward from the row's top.
+                    var matrix = GUI.matrix;
+                    var foot   = new Vector2(x, header.yMax);
+                    GUIUtility.RotateAroundPivot(-90, foot);
+                    GUI.Label(new Rect(foot.x, foot.y, widths[i] + 2, line), columns[i].Title);
+                    GUI.matrix = matrix;
+                }
+
+                x += width + ColumnGap;
+            }
+
+            foreach (var (revenue, label) in revenues) {
+                var row = SirenixEditorGUI.PrefixRect(EditorGUILayout.GetControlRect(), out var prefix);
+                EditorGUI.LabelField(prefix, label);
+                for (var i = 0; i < columns.Count; i++) {
+                    var width  = flat ? widths[i] : cell;
+                    var box    = new Rect(lefts[i] + (Mathf.Min(width, line + ColumnGap) - line) / 2, row.y, line, row.height);
+                    var editor = columns[i].Id == AnalyticsSdk.EditorSinkId;
+                    var on     = settings.Takes(columns[i].Id, revenue);
+                    var name   = AnalyticsEditor.services.FirstOrDefault(service => service.Id == columns[i].Id)?.RevenueEvent(revenue);
+                    var tip    = editor ? columns[i].Title.tooltip : name != null ? $"{columns[i].Title.text} gets it as {name}." : $"{columns[i].Title.text} gets it through its own call.";
+                    using (new EditorGUI.DisabledScope(editor && !settings.LogInEditor)) {
+                        EditorGUI.BeginChangeCheck();
+                        var next = EditorGUI.Toggle(box, on);
+                        GUI.Label(box, new GUIContent("", tip));
+                        if (!EditorGUI.EndChangeCheck()) continue;
+
+                        Undo.RecordObject(settings, "Change Analytics Revenue");
+                        settings.SetTakes(columns[i].Id, revenue, next);
+                        EditorUtility.SetDirty(settings);
+                    }
+                }
+            }
         }
 
         // The events the game logs, one row each, added with the bar's +.
