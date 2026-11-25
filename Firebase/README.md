@@ -1,6 +1,6 @@
 # RiseOn.Analytics.Firebase
 
-Google Analytics (analytics của Firebase) làm một dịch vụ của
+Firebase Analytics (Google gọi là Google Analytics) làm một dịch vụ của
 [`com.riseon.analytics`](../Core/README.md).
 
 Package `com.riseon.analytics.firebase`, namespace `RiseOn.Analytics.Firebase`.
@@ -82,10 +82,10 @@ https://github.com/riseongamestudio/Analytics.git?path=/Firebase
 | `AnalyticsSdk.LogAdRevenue` | Sự kiện `ad_impression`: `ad_platform` (mediation), `ad_source` (mạng thắng), `ad_format`, `ad_unit_name`, `value`, `currency` |
 | `AnalyticsSdk.LogPurchase` | iOS: `LogAppleTransactionAsync(transactionId)`, vì Unity IAP 5 dùng StoreKit 2 mà Firebase không tự thấy. Android, ô **Google Play Linked** bật (mặc định): không gọi gì; Firebase tự ghi giao dịch Google Play sau khi liên kết project Firebase với Google Play (Firebase console > Project settings > Integrations), gọi thêm sẽ tính trùng doanh thu. Ô đó tắt: sự kiện `in_app_purchase` với `product_name`, `value`, `currency`, `quantity`, như tài liệu Firebase cho Unity hướng dẫn |
 
-Hai dòng doanh thu chỉ gửi khi Google Analytics được tick ở dòng đó trong bảng
+Hai dòng doanh thu chỉ gửi khi Firebase Analytics được tick ở dòng đó trong bảng
 **Revenue** của trang Analytics.
 
-Ô **Google Play Linked** nằm trong dòng Google Analytics ở mục Services của trang
+Ô **Google Play Linked** nằm trong dòng Firebase Analytics ở mục Services của trang
 Analytics, lưu vào `Assets/RiseOn/Resources/RiseOnFirebaseAnalyticsSettings.asset`.
 | `AnalyticsSdk.SetUserId`, `SetUserProperty` | `SetUserId`, `SetUserProperty` |
 

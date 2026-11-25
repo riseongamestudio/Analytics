@@ -2,7 +2,7 @@
   "name": "com.riseon.analytics.firebase",
   "version": "1.0.2",
   "displayName": "RiseOn Analytics Firebase",
-  "description": "Google Analytics, Firebase's analytics, as a com.riseon.analytics service: events checked against Firebase's rules in the Editor, ad revenue as ad_impression, App Store purchases logged the way StoreKit 2 needs",
+  "description": "Firebase Analytics, which Google calls Google Analytics, as a com.riseon.analytics service: events checked against Firebase's rules in the Editor, ad revenue as ad_impression, App Store purchases logged the way StoreKit 2 needs",
   "unity": "6000.3",
   "documentationUrl": "https://github.com/riseongamestudio/Analytics/blob/com.riseon.analytics.firebase/1.0.2/Firebase/README.md",
   "author": {

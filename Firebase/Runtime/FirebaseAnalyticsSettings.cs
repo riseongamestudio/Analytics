@@ -2,7 +2,7 @@
 using UnityEngine;
 
 namespace RiseOn.Analytics.Firebase {
-    /// <summary>Google Analytics' own settings for this game, edited in Project Settings > RiseOn > Analytics and kept in a Resources asset the build carries.</summary>
+    /// <summary>Firebase Analytics' own settings for this game, edited in Project Settings > RiseOn > Analytics and kept in a Resources asset the build carries.</summary>
     internal sealed class FirebaseAnalyticsSettings : ScriptableObject {
         public const string ResourceName = "RiseOnFirebaseAnalyticsSettings";
 

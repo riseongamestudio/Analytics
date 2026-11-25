@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace RiseOn.Analytics.Firebase {
     /// <summary>
-    /// Google Analytics, Firebase's analytics.<br/>
+    /// Firebase Analytics, which Google calls Google Analytics.<br/>
     /// It starts with com.riseon.firebase's app.<br/>
     /// Consent needs nothing here: Google's UMP updates Analytics' consent mode itself where EU rules apply, once consent mode is on in the AdMob console.
     /// </summary>

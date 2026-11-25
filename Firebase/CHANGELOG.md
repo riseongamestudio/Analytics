@@ -8,9 +8,14 @@ Mọi thay đổi đáng kể của `com.riseon.analytics.firebase` được ghi
 
 ### Thêm
 
-- Ô **Google Play Linked** trong dòng Google Analytics của trang Analytics, bật sẵn.
+- Ô **Google Play Linked** trong dòng Firebase Analytics của trang Analytics, bật sẵn.
   Tắt khi project Firebase chưa liên kết Google Play: pack log `in_app_purchase` cho
   mỗi giao dịch Android.
+
+### Đổi
+
+- Trên trang Analytics, dịch vụ tên là Firebase Analytics thay cho Google Analytics, theo
+  tên package.
 
 ## [1.0.2] - 2026-11-20
 

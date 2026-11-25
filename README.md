@@ -6,7 +6,7 @@ cài và đánh version độc lập.
 | Thư mục | Package | Nội dung |
 |---|---|---|
 | [Core](Core/README.md) | `com.riseon.analytics` | `AnalyticsSdk`: một API static gửi sự kiện, doanh thu quảng cáo, giao dịch mua và thuộc tính người chơi tới mọi dịch vụ đã cài. Trang cài đặt khai báo sự kiện của game (enum `AnalyticsEvent`) và chọn sự kiện cho từng dịch vụ |
-| [Firebase](Firebase/README.md) | `com.riseon.analytics.firebase` | Google Analytics (analytics của Firebase) làm một dịch vụ |
+| [Firebase](Firebase/README.md) | `com.riseon.analytics.firebase` | Firebase Analytics (Google gọi là Google Analytics) làm một dịch vụ |
 | [AppsFlyer](AppsFlyer/README.md) | `com.riseon.analytics.appsflyer` | AppsFlyer làm một dịch vụ |
 
 ## Phụ thuộc

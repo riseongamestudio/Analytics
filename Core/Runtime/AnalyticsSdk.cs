@@ -81,7 +81,7 @@ namespace RiseOn.Analytics {
         public static void Log(AnalyticsEvent @event, string parameterName, double parameterValue) => Log(@event, new AnalyticsParameter(parameterName, parameterValue));
 
         /// <summary>
-        /// An ad's revenue, to each service the Revenue table of Project Settings > RiseOn > Analytics ticks, through its standard call: Google Analytics' ad_impression, AppsFlyer's logAdRevenue.<br/>
+        /// An ad's revenue, to each service the Revenue table of Project Settings > RiseOn > Analytics ticks, through its standard call: Firebase Analytics' ad_impression, AppsFlyer's logAdRevenue.<br/>
         /// com.riseon.ads calls it for every ad it shows, unless the page's Ad Revenue from Ads is off.
         /// </summary>
         public static void LogAdRevenue(in AdRevenue revenue) {
@@ -94,7 +94,7 @@ namespace RiseOn.Analytics {
         }
 
         /// <summary>
-        /// A store purchase, once, after the store confirmed it, to each service the Revenue table of Project Settings > RiseOn > Analytics ticks, through its standard call: Google Analytics' in_app_purchase, AppsFlyer's af_purchase.<br/>
+        /// A store purchase, once, after the store confirmed it, to each service the Revenue table of Project Settings > RiseOn > Analytics ticks, through its standard call: Firebase Analytics' in_app_purchase, AppsFlyer's af_purchase.<br/>
         /// com.riseon.iap calls it for every purchase it confirms, unless the page's Purchases from IAP is off.
         /// </summary>
         public static void LogPurchase(in PurchaseRevenue purchase) {

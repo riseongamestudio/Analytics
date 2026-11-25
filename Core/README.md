@@ -27,7 +27,7 @@ Package `com.riseon.analytics`, namespace `RiseOn.Analytics`.
 | `com.riseon.consent` 1.0.2 | Tự cài theo `package.json` | Dịch vụ nào cần (AppsFlyer) chờ người chơi trả lời form consent và popup ATT; người chơi đổi lựa chọn sau đó thì dịch vụ được báo |
 | `com.riseon.utils` 1.0.18 | Tự cài theo `package.json` | Các mục của trang cài đặt |
 | `com.cysharp.unitask` 2.5.11 | Tự cài theo `package.json`, từ OpenUPM | Các hàm `async` |
-| Ít nhất một dịch vụ | [`com.riseon.analytics.firebase`](../Firebase/README.md) (Google Analytics) hoặc [`com.riseon.analytics.appsflyer`](../AppsFlyer/README.md) (AppsFlyer): nút **Install** trên thanh của dịch vụ ở trang cài đặt, hoặc thêm vào manifest | Nơi sự kiện được gửi tới |
+| Ít nhất một dịch vụ | [`com.riseon.analytics.firebase`](../Firebase/README.md) (Firebase Analytics) hoặc [`com.riseon.analytics.appsflyer`](../AppsFlyer/README.md) (AppsFlyer): nút **Install** trên thanh của dịch vụ ở trang cài đặt, hoặc thêm vào manifest | Nơi sự kiện được gửi tới |
 
 "Tự cài" là Package Manager tự lấy theo version từ Unity Registry và các registry khai
 trong manifest, cả khi cài pack bằng git URL. Odin không có trên UPM nên phải cài vào
@@ -121,10 +121,10 @@ Mục **Revenue** là bảng hai dòng, **Ad revenue** và **Purchase**, mỗi c
 chuẩn của nó; mặc định tick hết. Cột Editor là Console in ra, và mờ khi Editor bị
 **Disable** ở mục Services. Tên cột không đủ chỗ nằm ngang thì xoay dọc.
 
-| | Google Analytics | AppsFlyer |
+| | Firebase Analytics | AppsFlyer |
 |---|---|---|
 | Ad revenue | Sự kiện `ad_impression` | Hàm `logAdRevenue`, không phải sự kiện |
-| Purchase | Android: Analytics tự ghi khi Firebase đã liên kết Google Play, không thì pack log `in_app_purchase` (ô **Google Play Linked** trong dòng Google Analytics của Services). iOS: `LogAppleTransactionAsync` | Sự kiện `af_purchase` |
+| Purchase | Android: Analytics tự ghi khi Firebase đã liên kết Google Play, không thì pack log `in_app_purchase` (ô **Google Play Linked** trong dòng Firebase Analytics của Services). iOS: `LogAppleTransactionAsync` | Sự kiện `af_purchase` |
 
 Muốn log sự kiện chuẩn theo cách riêng của game, ví dụ `ad_impression` kèm tham số
 thêm: bỏ tick dịch vụ đó ở dòng tương ứng, thêm sự kiện cùng tên ở mục **Events** rồi
@@ -162,7 +162,7 @@ build dừng:
 | Lỗi | Dev làm gì |
 |---|---|
 | Tên không phải chữ cái hoặc `_` rồi chữ, số, `_` | Sửa tên |
-| Tên sai luật của một dịch vụ đã cài, như Google Analytics: tối đa 40 ký tự, bắt đầu bằng chữ cái, không phải tên Firebase giữ chỗ (`first_open`, `session_start`...), không bắt đầu bằng `firebase_`, `google_`, `ga_` | Sửa tên |
+| Tên sai luật của một dịch vụ đã cài, như Firebase Analytics: tối đa 40 ký tự, bắt đầu bằng chữ cái, không phải tên Firebase giữ chỗ (`first_open`, `session_start`...), không bắt đầu bằng `firebase_`, `google_`, `ga_` | Sửa tên |
 | Tên `value__`, C# giữ cho mọi enum | Sửa tên |
 | Hai dòng cùng tên | Xóa một dòng |
 | Tên trùng sự kiện doanh thu chuẩn của một dịch vụ đang tick dòng đó ở bảng Revenue, và dịch vụ đó nhận sự kiện này | Bỏ tick ở bảng Revenue, hoặc đổi tên |

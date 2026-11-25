@@ -42,7 +42,7 @@ namespace RiseOn.Analytics.Editor {
         // The pack's services, each listed whether its package is in the project or not, with its folder in the Analytics repo, beside Core.
         private static readonly PackAdapters services = new("RiseOn.Analytics.Services", typeof(AnalyticsSettings)
                                                           , new PackAdapter("AppsFlyer", "com.riseon.analytics.appsflyer", "AppsFlyer")
-                                                          , new PackAdapter("Google Analytics", "com.riseon.analytics.firebase", "Firebase"));
+                                                          , new PackAdapter("Firebase Analytics", "com.riseon.analytics.firebase", "Firebase"));
 
         [MenuItem("RiseOn/Analytics")]
         internal static void Open() {
