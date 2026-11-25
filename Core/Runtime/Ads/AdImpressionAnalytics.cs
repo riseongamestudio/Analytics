@@ -13,7 +13,7 @@ namespace RiseOn.Analytics {
         }
 
         private static AdRevenue ToAdRevenue(AdImpression impression) {
-            return new(impression.Mediation, impression.Network, impression.Format.ToString(), impression.UnitId, impression.Value, impression.Currency);
+            return new(impression.Mediation, impression.Network, impression.Format.ToString(), impression.UnitId, impression.Value, impression.Currency, impression.Placement);
         }
     }
 }

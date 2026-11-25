@@ -261,10 +261,12 @@ namespace RiseOn.Analytics.Editor {
 
             var line   = EditorGUIUtility.singleLineHeight;
             var widths = columns.Select(column => EditorStyles.label.CalcSize(column.Title).x).ToList();
-            var flat   = widths.Sum() + ColumnGap * (columns.Count - 1) <= standardWidth;
-            var cell   = line + ColumnGap;
+            var widest = widths.Max();
+            var flat   = widest * columns.Count + ColumnGap * (columns.Count - 1) <= standardWidth;
+            var cell   = flat ? widest : line + ColumnGap;
 
-            // Flat, each column as wide as its header; on their side, as wide as a line, the header row as tall as the longest.
+            // Flat, every column as wide as the widest header, each header and tick centered in its own; on their side, as wide as a
+            // line, the header row as tall as the longest.
             var header = SirenixEditorGUI.PrefixRect(EditorGUILayout.GetControlRect(false, flat ? line : widths.Max() + 4), out _);
             if (Event.current.type is EventType.Repaint && !Mathf.Approximately(standardWidth, header.width)) {
                 standardWidth = header.width;
@@ -275,9 +277,8 @@ namespace RiseOn.Analytics.Editor {
             var x     = header.x;
             for (var i = 0; i < columns.Count; i++) {
                 lefts.Add(x);
-                var width = flat ? widths[i] : cell;
                 if (flat) {
-                    GUI.Label(new Rect(x, header.y, width, line), columns[i].Title);
+                    GUI.Label(new Rect(x + (cell - widths[i]) / 2, header.y, widths[i], line), columns[i].Title);
                 } else {
                     // Turned a quarter left about its bottom left corner, the text reads upward from the row's top.
                     var matrix = GUI.matrix;
@@ -287,15 +288,14 @@ namespace RiseOn.Analytics.Editor {
                     GUI.matrix = matrix;
                 }
 
-                x += width + ColumnGap;
+                x += cell + ColumnGap;
             }
 
             foreach (AnalyticsStandardEvent standard in System.Enum.GetValues(typeof(AnalyticsStandardEvent))) {
                 var row = SirenixEditorGUI.PrefixRect(EditorGUILayout.GetControlRect(), out var prefix);
                 EditorGUI.LabelField(prefix, standardEventLabels.TryGetValue(standard, out var label) ? label : new GUIContent(ObjectNames.NicifyVariableName(standard.ToString())));
                 for (var i = 0; i < columns.Count; i++) {
-                    var width  = flat ? widths[i] : cell;
-                    var box    = new Rect(lefts[i] + (Mathf.Min(width, line + ColumnGap) - line) / 2, row.y, line, row.height);
+                    var box    = new Rect(lefts[i] + (cell - line) / 2, row.y, line, row.height);
                     var editor = columns[i].Id == AnalyticsSdk.EditorSinkId;
                     var on     = settings.Takes(columns[i].Id, standard);
                     var name   = AnalyticsEditor.services.FirstOrDefault(service => service.Id == columns[i].Id)?.StandardEventName(standard);

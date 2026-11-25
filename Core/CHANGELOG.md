@@ -16,6 +16,9 @@ Mọi thay đổi đáng kể của `com.riseon.analytics` được ghi ở đâ
 - Trang báo đỏ khi một sự kiện của game trùng tên event chuẩn của một dịch vụ đang
   nhận dòng đó, vì sẽ bị đếm hai lần.
 - `AnalyticsEditor.RegisterService` nhận `standardEvents`.
+- Doanh thu quảng cáo tự gửi từ pack Ads mang `placement` của lần hiện (`AdImpression.Placement`,
+  cần `com.riseon.ads` bản có trường này): placement game truyền cho ad full-screen tới các dịch
+  vụ nhận nó, như AppsFlyer.
 
 ### Đổi
 
