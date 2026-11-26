@@ -20,7 +20,7 @@ Package `com.riseon.analytics.appsflyer`, namespace `RiseOn.Analytics.AppsFlyer`
 |---|---|---|
 | Unity 6000.3 | | Bản đang dùng để phát triển |
 | [Odin Inspector](https://odininspector.com) | Cài tay từ Asset Store | Các mục của AppsFlyer trên trang Analytics |
-| `com.riseon.analytics` 1.0.2 | Tự cài theo `package.json` | API mà game gọi |
+| `com.riseon.analytics` 2.0.0 | Tự cài theo `package.json` | API mà game gọi |
 | `appsflyer-unity-plugin` 7.0.2 | Tự cài theo `package.json`, từ registry RiseOn | AppsFlyer SDK |
 | `com.cysharp.unitask` 2.5.11 | Tự cài theo `package.json`, từ OpenUPM | Các hàm `async` |
 
@@ -51,7 +51,7 @@ cũng có nút **Install** cho pack này.
     }
   ],
   "dependencies": {
-    "com.riseon.analytics.appsflyer": "1.0.2"
+    "com.riseon.analytics.appsflyer": "1.0.3"
   }
 }
 ```
@@ -105,8 +105,10 @@ Game cho trẻ em (`Child Directed` trong Consent) thì AppsFlyer không khởi 
 | `AnalyticsSdk.SetUserId` | `setCustomerUserId` |
 | `AnalyticsSdk.SetUserProperty` | Không gửi; AppsFlyer không có thuộc tính người chơi |
 
-Mặc định AppsFlyer nhận mọi sự kiện (**All** trên thanh **Events** của dòng AppsFlyer);
-chọn **Selected** rồi thêm vào list những sự kiện chiến dịch cần để chỉ gửi chúng.
+Hai event chuẩn (doanh thu quảng cáo, giao dịch) chỉ gửi khi AppsFlyer được tick ở dòng
+đó trong bảng **Standard Events** của trang Analytics. Sự kiện của game gửi tới AppsFlyer
+khi ô cột AppsFlyer của sự kiện đó trong bảng **Events** được tick (mặc định tick); bỏ tick
+những sự kiện chiến dịch không cần.
 
 ## Lịch sử thay đổi
 

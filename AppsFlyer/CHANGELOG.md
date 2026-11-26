@@ -6,13 +6,21 @@ Mọi thay đổi đáng kể của `com.riseon.analytics.appsflyer` được gh
 
 ## [Unreleased]
 
+## [1.0.3] - 2026-11-26
+
 ### Thêm
 
 - Trang Analytics chặn sự kiện của game tên `af_purchase` khi AppsFlyer đang nhận
-  dòng Purchase của bảng Standard Events.
+  dòng Purchase của bảng Standard Events và sự kiện đó gửi tới AppsFlyer.
 - Build iOS dừng khi External Dependency Manager lấy thư viện iOS qua Swift Package
   Manager, vì cách đó làm game crash ngay khi mở; nút **Use CocoaPods** trên trang
   Analytics tắt nó.
+
+### Đổi
+
+- Cột của AppsFlyer trong bảng Events, Standard Events của trang Analytics có logo
+  AppsFlyer.
+- Phụ thuộc lên bản phát hành cùng đợt: `com.riseon.analytics` 2.0.0.
 
 ## [1.0.2] - 2026-11-20
 

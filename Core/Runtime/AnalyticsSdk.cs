@@ -49,7 +49,7 @@ namespace RiseOn.Analytics {
             }
 
             parameters ??= Array.Empty<AnalyticsParameter>();
-            if (Application.isEditor && Settings.LogInEditor && Settings.Sends(EditorSinkId, @event)) Debug.Log($"{nameof(AnalyticsSdk)}: {name} {string.Join(", ", parameters)}");
+            if (Application.isEditor && Settings.Sends(EditorSinkId, @event)) Debug.Log($"{nameof(AnalyticsSdk)}: {name} {string.Join(", ", parameters)}");
 
             var problems = new List<string>();
             foreach (var sink in sinks) {
@@ -82,10 +82,10 @@ namespace RiseOn.Analytics {
 
         /// <summary>
         /// An ad's revenue, to each service the Standard Events table of Project Settings > RiseOn > Analytics ticks, through its standard call: Firebase Analytics' ad_impression, AppsFlyer's logAdRevenue.<br/>
-        /// com.riseon.ads calls it for every ad it shows, unless the page's Ad Revenue from Ads is off.
+        /// com.riseon.ads calls it for every ad it shows, unless the page's Link RiseOn Ads is off.
         /// </summary>
         public static void LogAdRevenue(in AdRevenue revenue) {
-            if (Application.isEditor && Settings.LogInEditor && Settings.Takes(EditorSinkId, AnalyticsStandardEvent.AdRevenue)) Debug.Log($"{nameof(AnalyticsSdk)}: ad revenue {revenue}");
+            if (Application.isEditor && Settings.Takes(EditorSinkId, AnalyticsStandardEvent.AdRevenue)) Debug.Log($"{nameof(AnalyticsSdk)}: ad revenue {revenue}");
 
             var copy = revenue;
             foreach (var sink in sinks) {
@@ -95,10 +95,10 @@ namespace RiseOn.Analytics {
 
         /// <summary>
         /// A store purchase, once, after the store confirmed it, to each service the Standard Events table of Project Settings > RiseOn > Analytics ticks, through its standard call: Firebase Analytics' in_app_purchase, AppsFlyer's af_purchase.<br/>
-        /// com.riseon.iap calls it for every purchase it confirms, unless the page's Purchases from IAP is off.
+        /// com.riseon.iap calls it for every purchase it confirms, unless the page's Link RiseOn Iap is off.
         /// </summary>
         public static void LogPurchase(in PurchaseRevenue purchase) {
-            if (Application.isEditor && Settings.LogInEditor && Settings.Takes(EditorSinkId, AnalyticsStandardEvent.Purchase)) Debug.Log($"{nameof(AnalyticsSdk)}: purchase {purchase}");
+            if (Application.isEditor && Settings.Takes(EditorSinkId, AnalyticsStandardEvent.Purchase)) Debug.Log($"{nameof(AnalyticsSdk)}: purchase {purchase}");
 
             var copy = purchase;
             foreach (var sink in sinks) {

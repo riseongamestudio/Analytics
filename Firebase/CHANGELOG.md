@@ -6,16 +6,21 @@ Mọi thay đổi đáng kể của `com.riseon.analytics.firebase` được ghi
 
 ## [Unreleased]
 
-### Thêm
-
-- Ô **Google Play Linked** trong dòng Firebase Analytics của trang Analytics, bật sẵn.
-  Tắt khi project Firebase chưa liên kết Google Play: pack log `in_app_purchase` cho
-  mỗi giao dịch Android.
+## [2.0.0] - 2026-11-26
 
 ### Đổi
 
+- Giao dịch Android: pack giờ log `in_app_purchase` cho mỗi giao dịch, trừ khi ô mới
+  **Google Play Linked** (dòng Firebase Analytics ở mục Services của trang Analytics,
+  tắt sẵn) được bật; bản 1.0.2 không gửi gì trên Android. Game có project Firebase đã
+  liên kết Google Play (Firebase console > Project settings > Integrations) thì bật ô
+  này khi nâng cấp, không thì doanh thu bị đếm hai lần.
+- Ô đó lưu vào asset mới `Assets/RiseOn/Resources/RiseOnFirebaseAnalyticsSettings.asset`;
+  asset nằm ngoài thư mục `Resources` thì trang báo lỗi và build dừng.
 - Trên trang Analytics, dịch vụ tên là Firebase Analytics thay cho Google Analytics, theo
-  tên package.
+  tên package, và cột của nó trong bảng Events, Standard Events có logo Firebase.
+- Phụ thuộc lên bản phát hành cùng đợt: `com.riseon.analytics` 2.0.0, `com.riseon.firebase`
+  1.0.3.
 
 ## [1.0.2] - 2026-11-20
 

@@ -18,7 +18,7 @@
     "versionDefines": [
         {
             "name": "com.riseon.ads",
-            "expression": "0.0.1",
+            "expression": "3.0.0",
             "define": "ANALYTICS_SUPPORT_ADS"
         }
     ],

@@ -25,7 +25,7 @@ Package `com.riseon.analytics`, namespace `RiseOn.Analytics`.
 | Unity 6000.3 | | Bản đang dùng để phát triển |
 | [Odin Inspector](https://odininspector.com) | Cài tay từ Asset Store | Các mục của trang cài đặt |
 | `com.riseon.consent` 1.0.2 | Tự cài theo `package.json` | Dịch vụ nào cần (AppsFlyer) chờ người chơi trả lời form consent và popup ATT; người chơi đổi lựa chọn sau đó thì dịch vụ được báo |
-| `com.riseon.utils` 1.0.18 | Tự cài theo `package.json` | Các mục của trang cài đặt |
+| `com.riseon.utils` 2.0.0 | Tự cài theo `package.json` | Các mục của trang cài đặt |
 | `com.cysharp.unitask` 2.5.11 | Tự cài theo `package.json`, từ OpenUPM | Các hàm `async` |
 | Ít nhất một dịch vụ | [`com.riseon.analytics.firebase`](../Firebase/README.md) (Firebase Analytics) hoặc [`com.riseon.analytics.appsflyer`](../AppsFlyer/README.md) (AppsFlyer): nút **Install** trên thanh của dịch vụ ở trang cài đặt, hoặc thêm vào manifest | Nơi sự kiện được gửi tới |
 
@@ -54,7 +54,7 @@ của `com.riseon.consent`), vào `Packages/manifest.json`, rồi thêm package:
     }
   ],
   "dependencies": {
-    "com.riseon.analytics": "1.0.2"
+    "com.riseon.analytics": "2.0.0"
   }
 }
 ```
@@ -90,9 +90,11 @@ AnalyticsSdk.SetUserProperty("cohort", "b");
 - Gọi trước khi dịch vụ khởi động thì pack giữ lại, khởi động xong mới gửi; mỗi
   dịch vụ giữ tối đa 1000 lời gọi, quá thì bỏ cái cũ nhất và log cảnh báo.
 - Project cài `com.riseon.ads` thì doanh thu mọi lần hiện quảng cáo tự gửi đi, game
-  không gọi `LogAdRevenue`; game tự log thì tắt **Ad Revenue from Ads** trên trang.
+  không gọi `LogAdRevenue`; game tự log thì bỏ tick **Link RiseOn Ads** ở dòng Ad Revenue
+  của bảng Standard Events.
 - Project cài `com.riseon.iap` thì mọi giao dịch cửa hàng đã xác nhận tự gửi đi, game
-  không gọi `LogPurchase`; game tự log thì tắt **Purchases from IAP** trên trang.
+  không gọi `LogPurchase`; game tự log thì bỏ tick **Link RiseOn Iap** ở dòng Purchase
+  của bảng Standard Events.
   Game tự log thì chỉ gọi `LogPurchase` khi cửa hàng đã xác nhận giao dịch, mỗi giao
   dịch một lần.
 - `LogAdRevenue` và `LogPurchase` gửi qua hàm chuẩn của từng dịch vụ, tới các dịch vụ
@@ -106,22 +108,25 @@ Inspector của asset chỉ có nút mở trang này.
 
 | Mục | Ý nghĩa |
 |---|---|
-| Integrations > Ad Revenue from Ads | Bật (mặc định) thì doanh thu mọi lần `com.riseon.ads` hiện quảng cáo tự gửi tới mọi dịch vụ; tắt khi game tự gọi `LogAdRevenue`. Project không có `com.riseon.ads` thì ô tắt và không đổi được |
-| Integrations > Purchases from IAP | Bật (mặc định) thì mọi giao dịch `com.riseon.iap` xác nhận tự gửi tới mọi dịch vụ; tắt khi game tự gọi `LogPurchase`. Project không có `com.riseon.iap` thì ô tắt và không đổi được |
-| Services > Editor | Dòng đầu, không cần cài. Bật (mặc định) thì trong Editor, Console in sự kiện, doanh thu quảng cáo và giao dịch game báo; nút **Disable** ở cuối dòng tắt nó, **Enable** bật lại. Tắt thì không in và dòng gập lại. Bật hay tắt thì Editor cũng không gửi gì lên dịch vụ, vì SDK của các dịch vụ là native |
-| Services > từng dịch vụ | Mỗi dịch vụ đã cài, và mỗi dịch vụ của pack chưa cài, một dòng, xếp theo tên. Dòng của dịch vụ thuộc pack có ở cột giá trị: phiên bản trong project, **Install** khi chưa cài (Core từ registry thì chọn phiên bản; Core là thư mục local thì lấy thư mục `AppsFlyer`, `Firebase` cạnh `Core`), **Update** khi có bản mới hơn, **Uninstall** khi manifest ghi package đó. Thanh của mục có **Update All** và nút đọc lại phiên bản. Dịch vụ chưa cài chỉ có tên; dịch vụ đã cài gập mở phần riêng của nó |
-| Events ở cuối mỗi dòng của Services | Ô chọn trên thanh: **All** (mặc định) nhận mọi sự kiện; **Selected** chỉ nhận các sự kiện trong list mở ra dưới thanh, nút **+** thêm một sự kiện của `AnalyticsEvent` chưa có trong list, **×** bỏ ra. Với Editor là các sự kiện Console in. Event chuẩn theo bảng Standard Events; dữ liệu người chơi luôn gửi |
-| Standard Events | Bảng event chuẩn, gập được, xem [Event chuẩn](#event-chuẩn) |
-| Events | Các sự kiện game log, xem [Sự kiện](#sự-kiện) |
+| Services | Mỗi dịch vụ đã cài, và mỗi dịch vụ của pack chưa cài, một dòng, xếp theo tên. Dòng của dịch vụ thuộc pack có ở cột giá trị: phiên bản trong project, **Install** khi chưa cài (Core từ registry thì chọn phiên bản; Core là thư mục local thì lấy thư mục `AppsFlyer`, `Firebase` cạnh `Core`), **Update** khi có bản mới hơn, **Uninstall** khi manifest ghi package đó. Thanh của mục có **Update All** và nút đọc lại phiên bản. Dịch vụ chưa cài chỉ có tên; dịch vụ đã cài có ô riêng thì gập mở các ô đó dưới tên |
+| Standard Events | Bảng event chuẩn, gập được: pack Ads, IAP có tự gửi không, và dịch vụ nào nhận, xem [Event chuẩn](#event-chuẩn) |
+| Events | Bảng các sự kiện game log, và dịch vụ nào nhận từng sự kiện, xem [Sự kiện](#sự-kiện) |
 
 ## Event chuẩn
 
 Event chuẩn là event mà mỗi dịch vụ có sẵn hàm riêng, nuôi báo cáo có sẵn của dịch vụ
 đó. Mục **Standard Events** là bảng mỗi dòng một event chuẩn, hiện có **Ad Revenue**
-và **Purchase**, mỗi cột một dịch vụ đã cài, cột **Editor** đầu tiên. Tick ở ô nào
-thì dịch vụ đó nhận dòng đó qua hàm chuẩn của nó; mặc định tick hết, kể cả dòng thêm
-về sau. Cột Editor là Console in ra, và mờ khi Editor bị **Disable** ở mục Services.
-Tên cột không đủ chỗ nằm ngang thì xoay dọc.
+và **Purchase**. Mỗi cột một dịch vụ đã cài, cột **Editor** đầu tiên; đầu cột là
+icon của dịch vụ, rê chuột hiện tên. Tick ở ô nào thì dịch vụ đó nhận dòng đó qua hàm
+chuẩn của nó; mặc định tick hết, kể cả dòng thêm về sau. Cột Editor là Console in ra
+khi game chạy trong Editor, không cần cài; Editor không gửi gì lên dịch vụ, vì SDK của
+các dịch vụ là native. Không muốn Console in dòng nào thì bỏ tick ô Editor của dòng đó.
+
+Sau các cột, dòng Ad Revenue có ô **Link RiseOn Ads**, dòng Purchase có ô **Link
+RiseOn Iap**. Tick (mặc định) thì pack đó tự gửi: `com.riseon.ads` gửi
+doanh thu mỗi lần hiện quảng cáo, `com.riseon.iap` gửi mỗi giao dịch đã xác nhận. Bỏ
+tick khi game tự gọi `LogAdRevenue` hay `LogPurchase`. Project chưa có pack đó thì ô
+tắt và không đổi được.
 
 | | Firebase Analytics | AppsFlyer |
 |---|---|---|
@@ -136,10 +141,13 @@ lần, nên trang báo đỏ và build dừng.
 
 ## Sự kiện
 
-Mục **Events** liệt kê sự kiện game log, mỗi dòng một sự kiện: **Name** là tên gửi
+Mục **Events** là bảng sự kiện game log, mỗi dòng một sự kiện: **Name** là tên gửi
 lên dịch vụ và cũng là tên thành viên trong `AnalyticsEvent` (trùng từ khóa C# thì
-thêm `@`), **Description** thành doc comment của thành viên đó. Nút **+** trên thanh
-thêm dòng mới.
+thêm `@`), rồi các cột dịch vụ như bảng Standard Events: tick ở ô nào thì dịch vụ đó
+nhận sự kiện đó; cuối dòng là **Description**, thành doc comment của thành viên đó. Nút **+** trên
+thanh thêm dòng mới, tick sẵn mọi dịch vụ. Dịch vụ cài về sau nhận mọi sự kiện cho
+tới khi bỏ tick. Dữ liệu người chơi (`SetUserId`, `SetUserProperty`) luôn gửi mọi
+dịch vụ.
 
 Mỗi sự kiện có một số ngẫu nhiên cố định. Field `AnalyticsEvent` lưu số đó, nên đổi
 tên hay xóa sự kiện khác không làm field trỏ sai.
@@ -200,7 +208,9 @@ Phần Editor gọi `AnalyticsEditor.RegisterService` trong một
 `[InitializeOnLoadMethod]` để có dòng trong mục Services và chặn build khi thiếu
 thiết lập. Dịch vụ có luật riêng cho tên sự kiện thì truyền `eventProblems`, để trang
 báo lỗi từng sự kiện vi phạm. Hàm chuẩn nào của dịch vụ gửi sự kiện có tên thì khai
-tên đó trong `standardEvents`, để trang chặn sự kiện của game trùng tên.
+tên đó trong `standardEvents`, để trang chặn sự kiện của game trùng tên. `icon` là
+logo của dịch vụ, vẽ ở đầu cột của nó trong bảng Events và Standard Events; không có
+thì cột ghi tên dịch vụ.
 
 ## Lịch sử thay đổi
 

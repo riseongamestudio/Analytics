@@ -21,8 +21,8 @@ Package `com.riseon.analytics.firebase`, namespace `RiseOn.Analytics.Firebase`.
 |---|---|---|
 | Unity 6000.3 | | Bản đang dùng để phát triển |
 | [Odin Inspector](https://odininspector.com) | Cài tay từ Asset Store | Pack không dùng Odin, nhưng mọi pack RiseOn đều cần nó, để cài đặt như nhau |
-| `com.riseon.analytics` 1.0.2 | Tự cài theo `package.json` | API mà game gọi |
-| `com.riseon.firebase` 1.0.2 | Tự cài theo `package.json` | Khởi động Firebase; project phải có file cấu hình Firebase của game |
+| `com.riseon.analytics` 2.0.0 | Tự cài theo `package.json` | API mà game gọi |
+| `com.riseon.firebase` 1.0.3 | Tự cài theo `package.json` | Khởi động Firebase; project phải có file cấu hình Firebase của game |
 | `com.google.firebase.analytics` 13.17.0 | Tự cài theo `package.json`, từ registry RiseOn | Firebase Analytics SDK |
 | `com.cysharp.unitask` 2.5.11 | Tự cài theo `package.json`, từ OpenUPM | Các hàm `async` |
 
@@ -58,7 +58,7 @@ pack này.
     }
   ],
   "dependencies": {
-    "com.riseon.analytics.firebase": "1.0.2"
+    "com.riseon.analytics.firebase": "2.0.0"
   }
 }
 ```
@@ -80,14 +80,14 @@ https://github.com/riseongamestudio/Analytics.git?path=/Firebase
 |---|---|
 | `AnalyticsSdk.Log` | `LogEvent` với đúng tên và tham số |
 | `AnalyticsSdk.LogAdRevenue` | Sự kiện `ad_impression`: `ad_platform` (mediation), `ad_source` (mạng thắng), `ad_format`, `ad_unit_name`, `value`, `currency` |
-| `AnalyticsSdk.LogPurchase` | iOS: `LogAppleTransactionAsync(transactionId)`, vì Unity IAP 5 dùng StoreKit 2 mà Firebase không tự thấy. Android, ô **Google Play Linked** bật (mặc định): không gọi gì; Firebase tự ghi giao dịch Google Play sau khi liên kết project Firebase với Google Play (Firebase console > Project settings > Integrations), gọi thêm sẽ tính trùng doanh thu. Ô đó tắt: sự kiện `in_app_purchase` với `product_name`, `value`, `currency`, `quantity`, như tài liệu Firebase cho Unity hướng dẫn |
+| `AnalyticsSdk.LogPurchase` | iOS: `LogAppleTransactionAsync(transactionId)`, vì Unity IAP 5 dùng StoreKit 2 mà Firebase không tự thấy. Android, ô **Google Play Linked** bật: không gọi gì; Firebase tự ghi giao dịch Google Play sau khi liên kết project Firebase với Google Play (Firebase console > Project settings > Integrations), gọi thêm sẽ tính trùng doanh thu. Ô đó tắt (mặc định): sự kiện `in_app_purchase` với `product_name`, `value`, `currency`, `quantity`, như tài liệu Firebase cho Unity hướng dẫn |
+| `AnalyticsSdk.SetUserId`, `SetUserProperty` | `SetUserId`, `SetUserProperty` |
 
-Hai event chuẩn này chỉ gửi khi Firebase Analytics được tick ở dòng đó trong bảng
-**Standard Events** của trang Analytics.
+Hai event chuẩn (doanh thu quảng cáo, giao dịch) chỉ gửi khi Firebase Analytics được tick
+ở dòng đó trong bảng **Standard Events** của trang Analytics.
 
 Ô **Google Play Linked** nằm trong dòng Firebase Analytics ở mục Services của trang
 Analytics, lưu vào `Assets/RiseOn/Resources/RiseOnFirebaseAnalyticsSettings.asset`.
-| `AnalyticsSdk.SetUserId`, `SetUserProperty` | `SetUserId`, `SetUserProperty` |
 
 Dịch vụ khởi động khi `FirebaseInit` xong; trước lúc đó các lời gọi chờ trong hàng
 đợi của `AnalyticsSdk`, tối đa 1000; quá thì bỏ lời gọi cũ nhất và log cảnh báo.

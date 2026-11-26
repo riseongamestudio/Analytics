@@ -34,7 +34,7 @@ namespace RiseOn.Analytics.Editor {
                 var name = events[i].Name ?? "";
                 foreach (var service in AnalyticsEditor.services) {
                     foreach (AnalyticsStandardEvent standard in Enum.GetValues(typeof(AnalyticsStandardEvent))) {
-                        if (service.StandardEventName(standard) != name || !settings.Takes(service.Id, standard) || !SendsEvent(settings, service.Id, events[i])) continue;
+                        if (service.StandardEventName(standard) != name || !settings.Takes(service.Id, standard) || !events[i].Sends(service.Id)) continue;
 
                         yield return Issue(settings, $"{service.Title} gets {name} twice, as its {ObjectNames.NicifyVariableName(standard.ToString())} standard event and as this event: untick it in the Standard Events table to log {name} as the game's own event, or rename the event.", Path(i));
                     }
@@ -53,16 +53,6 @@ namespace RiseOn.Analytics.Editor {
         }
 
         private static string Path(int index) => $"events.Array.data[{index}].name";
-
-        // As AnalyticsSettings.Sends, by the event's id: an event added since the last Apply has no AnalyticsEvent member yet.
-        private static bool SendsEvent(AnalyticsSettings settings, string sink, AnalyticsEventEntry entry) {
-            foreach (var listed in settings.Sinks) {
-                if (listed.Sink != sink) continue;
-                return !listed.OnlyListed || listed.Events.Any(@event => (int) @event == entry.Id);
-            }
-
-            return true;
-        }
 
         private static SettingsIssue Issue(AnalyticsSettings settings, string message, string path) => new(BuildTarget.NoTarget, true, message, fieldAsset: settings, fieldPath: path);
     }

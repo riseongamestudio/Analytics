@@ -8,7 +8,7 @@ namespace RiseOn.Analytics.Firebase {
 
         [SerializeField, LabelText("Google Play Linked")]
         [Tooltip("The Firebase project is linked to Google Play (Firebase console > Project settings > Integrations), so Analytics collects Google Play purchases itself and the pack sends none on Android, which would count them twice; off, the pack logs in_app_purchase for each.")]
-        private bool googlePlayLinked = true;
+        private bool googlePlayLinked;
 
         /// <summary>Analytics collects Google Play purchases itself, so the pack logs none on Android.</summary>
         public bool GooglePlayLinked => googlePlayLinked;

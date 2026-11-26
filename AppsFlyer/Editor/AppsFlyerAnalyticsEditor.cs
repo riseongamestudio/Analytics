@@ -14,7 +14,9 @@ namespace RiseOn.Analytics.AppsFlyer.Editor {
         [InitializeOnLoadMethod]
         private static void Register() {
             AnalyticsEditor.RegisterService("appsflyer", "AppsFlyer", draw: () => tree.Draw(SettingsAssetUtils.LoadOrCreate<AppsFlyerSettings>(AppsFlyerSettings.ResourceName)), issues: Issues,
-                                            standardEvents: new Dictionary<AnalyticsStandardEvent, string> { { AnalyticsStandardEvent.Purchase, "af_purchase" } });
+                                            standardEvents: new Dictionary<AnalyticsStandardEvent, string> { { AnalyticsStandardEvent.Purchase, "af_purchase" } },
+                                            // AppsFlyer's logo, from its site.
+                                            icon: () => AssetDatabase.LoadAssetAtPath<UnityEngine.Texture>("Packages/com.riseon.analytics.appsflyer/Editor/AppsFlyer.png"));
         }
 
         private static IEnumerable<SettingsIssue> Issues() {
