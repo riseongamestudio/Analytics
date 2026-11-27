@@ -299,7 +299,7 @@ namespace RiseOn.Analytics.Editor {
             // A guess that laid the headers the wrong way lays the window out again.
             if (Event.current.type is EventType.Repaint) {
                 lastTable = (header.width, view);
-                if (need <= header.width != flat) HandleUtility.Repaint();
+                if (need <= header.width != flat) RepaintUtils.Request();
             }
 
             // A list's handle and x stand where a padded row's insets are, and a square wider.

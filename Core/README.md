@@ -54,7 +54,7 @@ của `com.riseon.consent`), vào `Packages/manifest.json`, rồi thêm package:
     }
   ],
   "dependencies": {
-    "com.riseon.analytics": "2.0.0"
+    "com.riseon.analytics": "2.0.1"
   }
 }
 ```

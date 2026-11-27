@@ -6,6 +6,14 @@ Mọi thay đổi đáng kể của `com.riseon.analytics` được ghi ở đâ
 
 ## [Unreleased]
 
+## [2.0.1] - 2026-11-27
+
+### Sửa
+
+- Bảng **Standard Events** trên trang settings: khi tiêu đề cột đổi giữa nằm ngang và
+  nằm dọc, trang vẽ lại ngay thay vì đứng ở bố cục cũ tới khi di chuột.
+- Phụ thuộc `com.riseon.utils` 2.1.0.
+
 ## [2.0.0] - 2026-11-26
 
 ### Thêm
