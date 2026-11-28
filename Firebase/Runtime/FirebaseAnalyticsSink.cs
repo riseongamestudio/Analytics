@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Google ships the Firebase SDK for these alone: a WebGL player, among others, has none of its assemblies, and so no sink.
+#if UNITY_EDITOR || UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -140,3 +142,4 @@ namespace RiseOn.Analytics.Firebase {
         }
     }
 }
+#endif

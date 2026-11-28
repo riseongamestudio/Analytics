@@ -21,8 +21,8 @@ Package `com.riseon.analytics.firebase`, namespace `RiseOn.Analytics.Firebase`.
 |---|---|---|
 | Unity 6000.3 | | Bản đang dùng để phát triển |
 | [Odin Inspector](https://odininspector.com) | Cài tay từ Asset Store | Pack không dùng Odin, nhưng mọi pack RiseOn đều cần nó, để cài đặt như nhau |
-| `com.riseon.analytics` 2.0.0 | Tự cài theo `package.json` | API mà game gọi |
-| `com.riseon.firebase` 1.0.3 | Tự cài theo `package.json` | Khởi động Firebase; project phải có file cấu hình Firebase của game |
+| `com.riseon.analytics` 2.1.0 | Tự cài theo `package.json` | API mà game gọi |
+| `com.riseon.firebase` 2.0.0 | Tự cài theo `package.json` | Khởi động Firebase; project phải có file cấu hình Firebase của game |
 | `com.google.firebase.analytics` 13.17.0 | Tự cài theo `package.json`, từ registry RiseOn | Firebase Analytics SDK |
 | `com.cysharp.unitask` 2.5.11 | Tự cài theo `package.json`, từ OpenUPM | Các hàm `async` |
 

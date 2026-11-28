@@ -24,8 +24,8 @@ Package `com.riseon.analytics`, namespace `RiseOn.Analytics`.
 |---|---|---|
 | Unity 6000.3 | | Bản đang dùng để phát triển |
 | [Odin Inspector](https://odininspector.com) | Cài tay từ Asset Store | Các mục của trang cài đặt |
-| `com.riseon.consent` 1.0.2 | Tự cài theo `package.json` | Dịch vụ nào cần (AppsFlyer) chờ người chơi trả lời form consent và popup ATT; người chơi đổi lựa chọn sau đó thì dịch vụ được báo |
-| `com.riseon.utils` 2.0.0 | Tự cài theo `package.json` | Các mục của trang cài đặt |
+| `com.riseon.consent` 2.1.0 | Tự cài theo `package.json` | Dịch vụ nào cần (AppsFlyer) chờ người chơi trả lời form consent và popup ATT; người chơi đổi lựa chọn sau đó thì dịch vụ được báo |
+| `com.riseon.utils` 2.1.0 | Tự cài theo `package.json` | Các mục của trang cài đặt |
 | `com.cysharp.unitask` 2.5.11 | Tự cài theo `package.json`, từ OpenUPM | Các hàm `async` |
 | Ít nhất một dịch vụ | [`com.riseon.analytics.firebase`](../Firebase/README.md) (Firebase Analytics) hoặc [`com.riseon.analytics.appsflyer`](../AppsFlyer/README.md) (AppsFlyer): nút **Install** trên thanh của dịch vụ ở trang cài đặt, hoặc thêm vào manifest | Nơi sự kiện được gửi tới |
 
@@ -194,6 +194,7 @@ trang đóng thì pack tự ghi lại file, đổi tên trong code như Apply. F
 | Một lời gọi tới SDK ném lỗi | Log exception, các dịch vụ khác vẫn nhận |
 | `Log` nhận một số ép sang `AnalyticsEvent` không phải sự kiện nào | Log lỗi, không gửi |
 | Thiếu thiết lập mà dịch vụ bắt buộc | Trang settings báo đỏ, build dừng |
+| Game chạy trên nền tảng ngoài Android và iOS (WebGL, bản build desktop) | Mỗi dịch vụ log lỗi một lần lúc khởi động, rồi bỏ mọi lời gọi tới nó. Bản build WebGL không có dịch vụ Firebase Analytics, vì SDK Firebase cho Unity không có bản WebGL |
 
 ## Viết dịch vụ mới
 

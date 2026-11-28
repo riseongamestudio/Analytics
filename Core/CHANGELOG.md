@@ -6,6 +6,19 @@ Mọi thay đổi đáng kể của `com.riseon.analytics` được ghi ở đâ
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-11-28
+
+### Thêm
+
+- WebGL và bản build desktop: game build được mà không phải gỡ pack. Trên nền tảng ngoài
+  Android và iOS, mỗi dịch vụ ghi một lỗi lúc khởi động rồi bỏ mọi lời gọi tới nó, thay
+  vì khởi động dịch vụ.
+
+### Đổi
+
+- Phụ thuộc `com.riseon.consent` 2.1.0, bản build được cho WebGL. Consent 2.0.0 là bản
+  major: game đang dùng Consent 1.x cần xem CHANGELOG của gói đó.
+
 ## [2.0.1] - 2026-11-27
 
 ### Sửa

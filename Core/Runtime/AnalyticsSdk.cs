@@ -35,6 +35,9 @@ namespace RiseOn.Analytics {
             sinks.Add(entry);
             if (Application.isEditor) {
                 entry.Stop();
+            } else if (Application.platform is not RuntimePlatform.Android and not RuntimePlatform.IPhonePlayer) {
+                Debug.LogError($"{nameof(AnalyticsSdk)}: {sink.Id} does not run on {Application.platform}, only on Android and iOS; its calls are dropped");
+                entry.Stop();
             } else {
                 Start(entry);
             }

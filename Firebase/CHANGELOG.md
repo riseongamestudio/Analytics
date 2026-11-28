@@ -6,6 +6,18 @@ Mọi thay đổi đáng kể của `com.riseon.analytics.firebase` được ghi
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-11-28
+
+### Thêm
+
+- WebGL: game build được mà không phải gỡ pack. Bản build WebGL không có dịch vụ Firebase
+  Analytics, vì SDK Firebase cho Unity không có bản WebGL.
+
+### Đổi
+
+- Phụ thuộc `com.riseon.firebase` 2.0.0, bản major: game gọi `FirebaseInit` cần xem
+  CHANGELOG của gói đó. Phụ thuộc `com.riseon.analytics` 2.1.0.
+
 ## [2.0.0] - 2026-11-26
 
 ### Đổi
